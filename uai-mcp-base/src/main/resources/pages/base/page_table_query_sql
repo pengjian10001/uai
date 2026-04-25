@@ -1,0 +1,149 @@
+<#assign
+	default_config={
+		"commonlog_db_config" : "mcp"
+	}
+/>
+<!DOCTYPE html>
+<html>
+<head>
+			<!--引入head-->
+			<#include "/pages/part/page_part_head">
+
+	
+</head>
+
+<body>
+<#--传递screen=空，可以使整个页面全屏，默认不全屏，使用container样式-->
+<div class="${screen!'container'}">
+	<div class="row clearfix">
+		<div class="col-md-12 column magine1">
+			<!--引入导航栏nav-->
+			<#include "/pages/part/page_part_nav">
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-2 column magine1">
+			<!--引入左边栏模版-->
+			<#include "/pages/part/page_part_left_menu">
+		</div>
+		<div class="col-md-10 column magine1">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+
+					<!--使用说明-->
+					<div class="panel panel-default">
+						<div class="panel-heading">使用说明</div>
+						<div class="panel-body">
+							<p><font color="red">内容转义html，返回的内容如果包含html，则会以纯文本的形式显示。不转义，则会以html的形式渲染显示。</font>
+							</p>
+						</div>
+					</div>
+
+					<!--请求表单-->
+					<form role="form" id="main_form" method="post" action="/util/file/text/page_table_query_getSqlReturnTable">
+						<div class="form-group">
+							 <label for="sql">请求参数</label>
+							 <textarea rows="3" class="form-control" id="querysql" name="querysql" placeholder="请输入sql">select * from merlin.common_log where logId = '' limit 1000</textarea>
+						</div>
+						<div class="form-group row">
+						    <div class="col-sm-2" style="margin-right:inherit">
+						      	<input type="text" class="form-control" name="db_config" placeholder="数据库配置名，例如deploy_db_prd">
+						    </div>	
+						    <div class="col-sm-2" style="margin-right:inherit">
+							    <select name="db_type" class="form-control">
+							    	<option value="mysql">mysql</option>
+							      	<option value="neo4j">neo4j</option>
+							      	<option value="config">config</option>
+							      	<option value="value">value</option>
+							    </select>
+						    </div>
+						    <div class="col-sm-2" style="margin-right:inherit">
+							    <select name="_page_tools_table_escapehtml" class="form-control">
+							    	<option value="true">内容转义html</option>
+							      	<option value="false">内容不转义html</option>
+							    </select>
+						    </div>
+						    <div class="col-sm-2" style="margin-right:inherit">
+						      	<button type="submit" class="btn btn-default" id="main_submit">提交</button>
+						    </div>	
+  						</div>						
+					</form>
+
+				</div>			
+			</div>			
+
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<label>请求结果</label>
+				</div>
+				<div class="col-md-12 column">
+					<div id="result_data" class="container"></div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<div id="loading" style="display:none" class="loading_weiyi"><img src='https://p.ke.com/v1/raw/p/coo-pkreport/08fd958fc30610fb0d1820202028013001389864.gif' /></div>
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+	commit_function = function (envent)  
+	{  
+		envent.preventDefault();  
+		var form = $(this);  
+		$.ajax({  
+			url: form.attr("action"),  
+			type: form.attr("method"), 
+			data: form.serialize(),  
+			dataType: 'html',
+			beforeSend: function ()  
+			{  
+				// 禁用按钮防止重复提交
+        		$("#main_submit").attr({ disabled: "disabled" });
+				// 加载动画
+				$("#loading").show();
+			},  
+			error: function (data)  
+			{  
+				alert("error:"+data.responseText)
+			},  
+			complete:function () { 
+				$("#main_submit").removeAttr("disabled");
+				$("#loading").hide();
+			},  
+			success: function (data)  
+			{  
+				$("#result_data").html(data);  
+			}  
+		}); 
+	};
+	$("#main_form").submit(commit_function);
+	$("#main_form2").submit(commit_function);
+	$("#main_form3").submit(commit_function);
+	$("#main_form4").submit(commit_function);
+	$("#main_form5").submit(commit_function);
+
+	<#--设置db_config的值。默认为default_config.commonlog_db_config-->
+	<#if (db_config?? && db_config?length>0)>
+		$("#main_form").find("[name='db_config']").val("${db_config}")
+	<#else>
+		$("#main_form").find("[name='db_config']").val("${default_config.commonlog_db_config}")
+	</#if>
+
+	<#--设置db_type的值。-->
+	<#if (db_type?? && db_type?length>0)>
+		$("#main_form").find("[name='db_type']").find("[value='${db_type}']").attr("selected","selected")
+	</#if>
+	
+	<#--如果querysql不为空，则触发点击按钮，从而实现查询页面的分享-->
+	<#if (querysql?? && querysql?length>0)>
+		<#--为了避免查询语句中一些引号等特殊字符，在此处设置值-->
+		$("#querysql").val("${querysql}");
+		$("#main_submit").click();
+	</#if>
+	
+</script>

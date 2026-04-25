@@ -1,0 +1,45 @@
+<#assign
+	i=t.check("!all_column??", -1, "all_column不能为空")
+	all_column_list=t.split(all_column,'\\,',1000)
+	i=t.setParam('all_column_list',all_column_list)
+/>
+
+<#--对于mysql，db_name和table_name必须传递-->
+<#assign
+	i=t.check("!db_name?? || db_name?length==0", -1, "db_name为空")
+	i=t.check("!table_name?? || table_name?length==0", -1, "table_name为空")
+/>
+
+<#--
+	将字段名改为`字段名`，从而避免关键字
+	all_column有多少个字段，则insert语句中有多少?这样的占位符
+	得到所有insert sql中?对应的参数
+-->
+<#list all_column_list as col>
+	<#assign
+		i=t.putListParam('insert_column','`'+col+'`')
+		i=t.putListParam('insert_placeholder','?')
+		<#--参见page_table_part_bootstrap_table_form_insert，待更新字段的参数名称是加了form_前缀，所以此处需要处理-->
+		i=t.putListParam('insert_param',t.getParam('form_'+col))
+	/>
+</#list>
+<#assign
+	<#--
+		拼装insert语句
+	-->
+	insert_sql="insert into ${db_name}.${table_name} (${t.toSqlIn(true,t.getParam('insert_column'))}) values (${t.toSqlIn(true,t.getParam('insert_placeholder'))})"
+	result=ds.exeDB("insert", "获取数据", insert_sql, t.getParam('insert_param'), "insert")
+	i=t.log("---result-----"+t.toJson(result))
+/>
+
+<#if result?? && (result.id>0)>
+	<#assign
+		result_html="新增成功，id="+result.id
+	/>
+	${result_html}
+<#else>
+	<#assign
+		result_html="新增失败"
+	/>
+	${result_html}
+</#if>

@@ -1,0 +1,14 @@
+
+<#assign
+	sessionId = sessionId!t.randomUniqueId()
+	clientName = clientName!'test-client'
+	ucid = ucid!'0'
+	queryParam = {
+		"clientName": clientName,
+		"sessionId" : sessionId?string,
+		"ucid": ucid
+	}
+	result=mcpstmcli.queryLLMPure(message, queryParam)
+/>
+<#--mcpcli.query返回的是字符串，直接输出，无需t.toJson(result)-->
+${result}

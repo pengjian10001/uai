@@ -1,0 +1,21 @@
+server:
+  port: ${PORT:8080}
+  dubbo-port: ${DUBBOPORT:11200}
+
+# 服务治理组件配置，配置注册发现、负载均衡和熔断
+spring:
+  application:
+    name: bigdata-mcp
+  cloud:
+    polaris:
+      namespace: default # 配置注册命名空间
+      address: grpc://10.26.40.9:28639
+      discovery:
+        enabled: true
+      stat:
+        port: 8080 #prometheus暴露监控指标的接口
+        enabled: true
+      loadbalancer:
+        enabled: true
+      circuitbreaker:
+        enabled: true

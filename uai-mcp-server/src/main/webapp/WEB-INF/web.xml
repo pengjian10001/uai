@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+    http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<description>mcp server</description>
+
+	<display-name>mcp-server</display-name>
+
+	<listener>
+		<listener-class>com.uni.uai.server.DynamicServletListener</listener-class>
+	</listener>
+
+	<!-- 请求监控 -->
+	<filter>
+		<filter-name>uaiLogWebFilter</filter-name>
+		<filter-class>com.uni.uai.mcp.web.filter.WebFilter</filter-class>
+		<!-- 启用异步支持 -->
+    	<async-supported>true</async-supported>
+	</filter>
+	<filter-mapping>
+		<filter-name>uaiLogWebFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<!-- 启用异步支持 -->
+	    <dispatcher>REQUEST</dispatcher>
+	    <dispatcher>ASYNC</dispatcher>
+	</filter-mapping>
+
+
+</web-app>
+

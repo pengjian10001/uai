@@ -1,0 +1,25 @@
+
+			<ul class="nav nav-tabs">
+				<li class="active">
+					 <a href="#">首页</a>
+				</li>
+				<li>
+					 <a href="#">系统帮助</a>
+				</li>
+				<li class="disabled">
+					 <a href="#">信息</a>
+				</li>
+				<li class="dropdown pull-right">
+					 <a href="#" data-toggle="dropdown" class="dropdown-toggle"><#if _user??>${_user.userName!''}</#if><strong class="caret"></strong></a>
+					<ul class="dropdown-menu">
+						<li>
+							 <a href="#">用户信息</a>
+						</li>
+						<li class="divider">
+						</li>
+						<li>
+							 <a href="${logout_url!'/base/logout'}">退出登陆</a>
+						</li>
+					</ul>
+				</li>
+			</ul>

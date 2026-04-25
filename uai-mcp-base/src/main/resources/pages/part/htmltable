@@ -1,0 +1,36 @@
+<#--一个只有html内联样式的table，可以嵌入到任意html中-->
+
+    <style>
+        table{width:100%;border-collapse:collapse;font-family:Arial,sans-serif}
+        th{background:#E6F4FF;color:#165DFF;padding:8px;text-align:left;font-weight:700}
+        td{padding:8px;border-bottom:1px solid #E6F4FF}
+        tr:hover{background:#F0F7FF}
+        .status{display:inline-block;padding:2px 6px;border-radius:3px;font-size:12px}
+        .success{background:#E6FFFA;color:#00B42A}
+        .warning{background:#FFF7E6;color:#FF7D00}
+    </style>
+    ${querysql}  
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>名称</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>#001</td>
+                <td>项目A</td>
+                <td><span class="status success">完成</span></td>
+                <td>查看</td>
+            </tr>
+            <tr>
+                <td>#002</td>
+                <td>项目B</td>
+                <td><span class="status warning">进行中</span></td>
+                <td>编辑</td>
+            </tr>
+        </tbody>
+    </table>

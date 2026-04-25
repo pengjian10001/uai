@@ -1,0 +1,43 @@
+<#--受special权限控制的功能-->
+<#if (role?? && role?string=='special')>
+	<#assign 
+		<#--菜单列表-->
+		menu_list={
+			"index":[
+				{"href":"#","clazz":"active","desc":"配置"},
+				{"href":"/util/configEdit","clazz":"","desc":"配置编辑"}
+			],
+			"help":[
+				{"href":"#","clazz":"active","desc":"功能集"},
+				{"href":"#","clazz":"","desc":"简单freemark语法"}
+			]
+		}
+	/>
+<#else>
+	<#assign
+		<#--菜单列表-->
+		menu_list={
+			"index":[
+				{"href":"#","clazz":"active","desc":"AI"},
+				{"href":"/pages/mcp/chat/box","clazz":"","desc":"一次问答"}
+			],
+			"help":[
+				{"href":"#","clazz":"active","desc":"功能集"},
+				{"href":"#","clazz":"","desc":"简单freemark语法"}
+			]
+			
+		}
+	/>
+</#if>
+
+<#assign 
+	<#--前端传入menu_name-->
+	menu_name=menu_name!"index"
+	menu=menu_list[menu_name]
+/>
+			<!--一个bootstrap列表组模版-->
+			<div class="list-group">
+				<#list menu as mi>
+					<a href="${mi.href}" class="list-group-item ${mi.clazz}">${mi.desc}</a>
+				</#list>
+			</div>

@@ -1,0 +1,17 @@
+
+<#assign
+	model = form_model!'test'
+	type = form_type?number
+	name = form_name
+	description = form_description
+	param_schema = form_param_schema
+	return_class = form_return_class!''
+	return_script = form_return_script!''
+	datasource_desc = form_datasource_desc!'{}'
+	datasource_config = form_datasource_config!'{}'
+	state = form_state?number
+	version = form_version!''
+	result=ds.insertToolToDB(model,type,name,description,param_schema,return_class,return_script,datasource_desc,datasource_config,state,version)
+/>
+<#--ds.insertToolToDB返回的是0/1，直接输出，无需u.toJson(result)-->
+${result}

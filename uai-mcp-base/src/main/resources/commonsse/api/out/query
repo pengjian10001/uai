@@ -1,0 +1,14 @@
+<#--提供给外部的流式大模型接口-->
+<#assign
+	i=t.check('!sessionId??', -1, "sessionId不能为空")
+	i=t.check('!clientName??', -1, "clientName不能为空")
+	i=t.check('!ucid??', -1, "ucid不能为空")
+	queryParam = {
+		"clientName": clientName,
+		"sessionId" : sessionId?string,
+		"ucid": ucid
+	}
+	result=mcpstmcli.queryLLMPure(message, queryParam)
+/>
+<#--mcpcli.query返回的是字符串，直接输出，无需t.toJson(result)-->
+${result}

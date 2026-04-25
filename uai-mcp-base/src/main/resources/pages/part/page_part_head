@@ -1,0 +1,58 @@
+<title>tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+  <!-- 引入 ECharts 文件https://cdn.bootcdn.net/ajax/libs/echarts/4.5.0/echarts.min.js -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@4.3.0/dist/echarts.min.js"></script>
+  <!-- 这是echarts的一些工具类，在一些echarts的示例中会使用其中的函数，例如，盒须图中，计算盒须图外的散点函数echarts.dataTool.prepareBoxplotData() https://cdn.bootcdn.net/ajax/libs/echarts/4.5.0/extension/dataTool.min.js-->
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+  <!-- 引入 Bootstrap https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css-->
+  <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery (Bootstrap的JavaScript插件需要引入jQuery) https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js-->
+  <script src="https://cdn.bootcss.com/jquery/3.5.1/jquery.min.js"></script>
+  <!-- 包括所有已编译的插件 https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js-->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <!-- 
+  	HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询  
+  	https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js
+  	https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js
+  -->
+  <!--[if lt IE 9]>
+     <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  
+    <!-- 引入Markdown解析库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.2.12/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/highlight.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/github.min.css" rel="stylesheet">
+  
+
+<!-- 基本的全局显示 
+  设置body的默认字体样式为 "Helvetica Neue", Helvetica, Arial, sans-serif。
+  设置文本的默认字体大小为 14 像素。
+  设置默认的行高度为 1.428571429。
+  设置默认的文本颜色为 #333333。
+  设置默认的背景颜色为白色。
+-->
+<style type="text/css">
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #333333;
+    background-color: #ffffff;
+  }
+  .magine1 {
+      margin-top: 10px;
+    margin-right: 0px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+  }
+  .loading_weiyi {  
+    position:absolute;  
+    width :120px;  
+    height:100px;  
+    top:30%;left:50%;  
+    vertical-align:middle;  
+  }  
+
+</style>

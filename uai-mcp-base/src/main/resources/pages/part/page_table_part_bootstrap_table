@@ -1,0 +1,73 @@
+<#--传递一个名为table的JSONObject，其中包含一个list字段，是一个JSONArray，指定要显示在表中的数据
+	
+-->
+<#assign
+	table={
+		"list":[{'a':1,'b':'hello world'},{'a':2,'b':'hello world'}]
+	}
+/>
+<#if (table?? && table.list??)>
+	<#assign
+		tableList=table.list![]
+	/>
+</#if>
+
+
+<#if (tableList?? && tableList?size>0)>
+	<#--首先拿到第一列和最后一列的字段名称，可能第一行的字段不全，所有合并最后一行的字段-->
+	<#assign
+		firstline=c.sublist(tableList,0,1)[0]
+        lastline=c.sublist(tableList,tableList?size-1,tableList?size)[0]
+		names=c.mergeListDistinct(firstline?keys, lastline?keys)
+        
+	/>
+						<table class="table table-striped table-bordered">
+							<thead>
+	<#--默认根据names来输出表头-->
+								<tr>
+	<#list names as name>
+									<th>${name}</th>
+	</#list>
+								</tr>
+							</thead>
+
+						<tbody>
+	<#--循环tableList-->
+	<#list tableList as line>
+								<tr>
+		<#--每一行，根据names取值-->
+		<#list names as name>
+			<#--处理布尔值显示-->
+			<#assign
+				ele_value=line[name]!'--'
+			/>
+			<#if ele_value?is_boolean>
+				<#assign
+					ele_value=ele_value?string("true","false")
+				/>
+			</#if>
+			<#--默认不对文本进行html转义，这会使得在表格中，不是显示纯文本，而是显示表格，可以在type=1 name=aop中，修改这种行为-->
+			<#if (!_page_tools_table_escapehtml?? || _page_tools_table_escapehtml=="false")>
+									<td>${ele_value}</td>
+			<#else>
+									<td>${t.escapeHtml(ele_value?string)}</td>
+			</#if>
+		</#list>
+								</tr>
+	</#list>
+							</tbody>
+						</table>
+<#else>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>table</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>返回结果为空</td>
+								</tr>
+							</tbody>
+						</table>
+</#if>

@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>uai-parent</artifactId>
+		<groupId>com.uni.uai</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>uai-mcp-server</artifactId>
+	<packaging>war</packaging>
+
+	<name>uai-mcp-server</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jackson.version>2.13.4</jackson.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.uni.uai</groupId>
+			<artifactId>uai-mcp-base</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.modelcontextprotocol.sdk</groupId>
+			<artifactId>mcp-spring-webmvc</artifactId>
+			<version>0.10.0</version>
+		</dependency>
+
+
+		<!-- 保留 Log4j2 相关依赖 -->
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-slf4j2-impl</artifactId>
+		    <version>2.20.0</version>
+		</dependency>
+		
+		<!-- 补充 Log4j2 核心依赖（如果尚未添加） -->
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>2.20.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
+		    <version>2.20.0</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>filters/*.*</exclude>
+					<exclude>**/*.properties</exclude>
+					<exclude>logback.xml</exclude>
+				</excludes>
+				<includes>
+					<include>**/*.*</include>
+					<!--支持同步ubag模版到classpath。注意，template/**/*.*不行-->
+					<include>template/**/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>filters/*.*</exclude>
+				</excludes>
+				<includes>
+					<include>**/*.yml</include>
+					<include>**/*.properties</include>
+					<include>logback.xml</include>
+				</includes>
+			</resource>
+		</resources>
+		<filters>
+			<filter>src/main/resources/application-${env}.yml</filter>
+		</filters>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<warName>uai-mcp-server</warName>
+					<webappDirectory>${webapp.directory}</webappDirectory>
+					<webResources>
+						<resource>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>*.*</include>
+								<include>**/*.*</include>
+							</includes>
+							<filtering>false</filtering>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>11.0.24</version> <!-- 使用你需要的版本 -->
+				<configuration>
+					<httpConnector>
+						<port>8080</port> <!-- 配置服务器端口 -->
+					</httpConnector>
+					<webApp>
+						<contextPath>/</contextPath> <!-- 配置上下文路径 -->
+					</webApp>
+				</configuration>
+			</plugin>
+
+
+		</plugins>
+		<finalName>uai-mcp-server</finalName>
+	</build>
+
+
+</project>

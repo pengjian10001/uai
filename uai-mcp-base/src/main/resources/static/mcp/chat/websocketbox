@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI对话框（WebSocket版）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Markdown解析库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.2.12/marked.min.js"></script>
+    <!-- HTML净化库 -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.11/dist/purify.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E4E7ED',
+                            300: '#C0C6CF',
+                            400: '#909399',
+                            500: '#606266',
+                            600: '#303133',
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .typing-animation::after {
+                content: '';
+                animation: typing 1.5s infinite;
+            }
+            @keyframes typing {
+                0%, 100% { content: ''; }
+                25% { content: '.'; }
+                50% { content: '..'; }
+                75% { content: '...'; }
+            }
+            .message-enter {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            .message-enter-active {
+                opacity: 1;
+                transform: translateY(0);
+                transition: opacity 300ms, transform 300ms;
+            }
+            /* Markdown样式增强 */
+            .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+                font-weight: bold;
+                margin-top: 1rem;
+                margin-bottom: 0.5rem;
+            }
+            .markdown-content h1 { font-size: 1.5rem; }
+            .markdown-content h2 { font-size: 1.25rem; }
+            .markdown-content h3 { font-size: 1.1rem; }
+            .markdown-content p { margin-bottom: 0.75rem; }
+            .markdown-content ul, .markdown-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+            .markdown-content ul { list-style-type: disc; }
+            .markdown-content ol { list-style-type: decimal; }
+            .markdown-content code {
+                background-color: rgba(0,0,0,0.05);
+                padding: 0.1rem 0.3rem;
+                border-radius: 0.25rem;
+                font-family: monospace;
+            }
+            .markdown-content pre {
+                background-color: rgba(0,0,0,0.05);
+                padding: 0.75rem;
+                border-radius: 0.25rem;
+                margin-bottom: 0.75rem;
+                overflow-x: auto;
+            }
+            .markdown-content blockquote {
+                border-left: 3px solid #ccc;
+                padding-left: 0.75rem;
+                margin-left: 0.5rem;
+                color: #666;
+                font-style: italic;
+            }
+            .markdown-content a {
+                color: #165DFF;
+                text-decoration: underline;
+            }
+            .markdown-content img {
+                max-width: 100%;
+                height: auto;
+                margin: 0.75rem 0;
+                border-radius: 0.25rem;
+            }
+            /* 确保用户消息文本为白色 */
+            .user-message .markdown-content {
+                color: white !important;
+            }
+            .user-message .markdown-content a {
+                color: white !important;
+                text-decoration: underline;
+            }
+            .user-message .markdown-content code {
+                background-color: rgba(255,255,255,0.2) !important;
+                color: white !important;
+            }
+            .user-message .markdown-content pre {
+                background-color: rgba(255,255,255,0.1) !important;
+                color: white !important;
+            }
+            /* WebSocket状态提示 */
+            .ws-status-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-size: 10px;
+                font-weight: 500;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral-100 min-h-screen">
+    <div class="max-w-3xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden relative">
+            <!-- WebSocket状态徽章 -->
+            <div id="ws-status-badge" class="ws-status-badge bg-yellow-100 text-yellow-800">
+                <i class="fa fa-circle-o-notch fa-spin mr-1"></i>连接中
+            </div>
+            
+            <!-- 头部 -->
+            <div class="bg-primary text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                        <i class="fa fa-robot text-white"></i>
+                    </div>
+                    <h1 class="font-bold text-lg">AI助手（WebSocket版）</h1>
+                </div>
+                <div id="status-indicator" class="text-sm flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                    <span>连接中...</span>
+                </div>
+            </div>
+            
+            <!-- 消息区域 -->
+            <div id="chat-container" class="h-[60vh] overflow-y-auto p-4 scrollbar-hide space-y-4">
+                <!-- 系统消息 -->
+                <div class="flex items-start mb-4 animate-[message-enter_0.3s_ease-out]">
+                    <div class="flex-shrink-0 mr-3">
+                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <i class="fa fa-info-circle text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="bg-neutral-100 rounded-lg p-3 max-w-[85%]">
+                        <p class="text-neutral-700">欢迎使用AI助手！我支持Markdown语法，你可以输入**加粗文本**、[链接](https://example.com)或`代码`等格式。正在建立WebSocket连接，稍后可开始对话...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 输入区域 -->
+            <div class="border-t border-neutral-200 p-4">
+                <div class="relative">
+                    <textarea id="user-input" rows="1" class="w-full px-4 py-3 pr-12 rounded-lg border border-neutral-300 bg-white text-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none" placeholder="WebSocket连接建立后可输入..." disabled></textarea>
+                    <button id="send-button" class="absolute right-3 bottom-3 p-2 rounded-full bg-neutral-300 text-neutral-500 cursor-not-allowed" disabled>
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="flex justify-between items-center mt-2 text-xs text-neutral-500">
+                    <div class="flex items-center">
+                        <span>支持Markdown语法</span>
+                        <span class="mx-2">|</span>
+                        <span class="font-mono">会话ID: <span id="session-id-value">生成中...</span></span>
+                        <span class="mx-2">|</span>
+                        <span class="font-mono">连接状态: <span id="connection-status">等待连接</span></span>
+                    </div>
+                    <div>按Enter发送，Shift+Enter换行</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================== 核心配置 ==========================
+        // WebSocket服务地址（根据实际部署环境调整，HTTP对应ws://，HTTPS对应wss://）
+        const WS_URL = (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + window.location.host + '/ws/ai-chat';
+        // 重连配置
+        const RECONNECT_DELAY = 3000; // 重连延迟（毫秒）
+        const MAX_RECONNECT_ATTEMPTS = 5; // 最大重连次数
+        // 消息类型枚举 - 已修正与服务端一致的命名
+        const MESSAGE_TYPES = {
+            USER_MESSAGE: 'USER_MESSAGE',
+            AI_RESPONSE: 'AI_RESPONSE',
+            SYSTEM_NOTICE: 'SYSTEM_NOTICE',
+            CONNECTION_ACK: 'CONNECTION_ACK',
+            ERROR: 'ERROR',
+            SYSTEM_GREETING: 'SYSTEM_GREETING'  // 添加系统问候类型，与服务端保持一致
+        };
+
+        // ========================== DOM元素 ==========================
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const chatContainer = document.getElementById('chat-container');
+        const statusIndicator = document.getElementById('status-indicator');
+        const sessionIdValue = document.getElementById('session-id-value');
+        const connectionStatus = document.getElementById('connection-status');
+        const wsStatusBadge = document.getElementById('ws-status-badge');
+        
+        // ========================== 状态管理 ==========================
+        let webSocket = null;
+        let reconnectAttempts = 0;
+        let isConnected = false;
+        let isAiResponding = false;
+        let currentSessionId = '';
+        let clientName = getClientFromUrl() || 'web-client';
+        let ucid = getUcIdFromUrl() || '0';
+        let typingIndicator = null;
+
+        // ========================== 初始化 ==========================
+        // 初始化Marked配置
+        marked.setOptions({
+            breaks: true, // 支持单行换行
+            gfm: true,    // 支持GitHub风格Markdown
+        });
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 生成/获取会话ID
+            initSessionId();
+            // 初始化输入框事件
+            initInputEvents();
+            // 建立WebSocket连接
+            initWebSocket();
+        });
+
+        // ========================== WebSocket核心逻辑 ==========================
+        /**
+         * 初始化WebSocket连接
+         */
+        function initWebSocket() {
+            // 关闭现有连接（如果存在）
+            if (webSocket) {
+                webSocket.close(1000, 'Reinitializing connection');
+            }
+
+            try {
+                // 创建新的WebSocket实例
+                webSocket = new WebSocket(WS_URL);
+
+                // 连接建立成功
+                webSocket.onopen = handleWsOpen;
+
+                // 接收服务器消息
+                webSocket.onmessage = handleWsMessage;
+
+                // 连接关闭
+                webSocket.onclose = handleWsClose;
+
+                // 连接错误
+                webSocket.onerror = handleWsError;
+
+            } catch (error) {
+                console.error('WebSocket初始化失败:', error);
+                updateConnectionStatus(false, '初始化失败');
+                scheduleReconnect();
+            }
+        }
+
+        /**
+         * 处理WebSocket连接打开事件
+         */
+        function handleWsOpen() {
+            console.log('WebSocket连接已建立');
+            reconnectAttempts = 0;
+            isConnected = true;
+            
+            // 更新UI状态
+            updateConnectionStatus(true, '已连接');
+            
+            // 发送连接确认请求（携带客户端信息）
+            sendWsMessage({
+                type: MESSAGE_TYPES.CONNECTION_ACK,
+                payload: {
+                    sessionId: currentSessionId,
+                    clientName: clientName,
+                    ucid: ucid,
+                    timestamp: new Date().getTime()
+                }
+            });
+            
+            // 添加系统通知
+            addMessage('system', `WebSocket连接已建立，可开始对话`, false, false);
+        }
+
+        /**
+         * 处理WebSocket消息接收事件
+         * @param {MessageEvent} event - 消息事件
+         */
+        function handleWsMessage(event) {
+            try {
+                // 解析服务器发送的JSON消息
+                const message = JSON.parse(event.data);
+                console.log('收到服务器消息:', message);
+
+                // 根据消息类型处理
+                switch (message.type) {
+                    case MESSAGE_TYPES.AI_RESPONSE:
+                        handleAiResponse(message.payload);
+                        break;
+                        
+                    case MESSAGE_TYPES.SYSTEM_NOTICE:
+                        handleSystemNotice(message.payload);
+                        break;
+                        
+                    case MESSAGE_TYPES.CONNECTION_ACK:
+                        handleConnectionAck(message.payload);
+                        break;
+                        
+                    case MESSAGE_TYPES.ERROR:
+                        handleWsErrorResponse(message.payload);
+                        break;
+
+                    case MESSAGE_TYPES.SYSTEM_GREETING:  // 处理系统问候消息
+                        handleSystemGreeting(message.payload);
+                        break;                        
+                        
+                    default:
+                        console.warn('未知消息类型:', message.type);
+                        addMessage('system', `收到未知类型消息: ${message.type}`, false, false);
+                }
+
+            } catch (error) {
+                console.error('解析WebSocket消息失败:', error);
+                addMessage('system', '收到无效消息，无法解析', false, false);
+            }
+        }
+
+        /**
+         * 处理系统问候消息
+         * @param {Object} payload - 消息负载
+         */
+        function handleSystemGreeting(payload) {
+            addMessage('system', payload.message, false, false);
+        }
+
+        /**
+         * 处理WebSocket连接关闭事件
+         * @param {CloseEvent} event - 关闭事件
+         */
+        function handleWsClose(event) {
+            isConnected = false;
+            isAiResponding = false;
+            
+            // 清除AI响应状态（如果存在）
+            clearAiRespondingState();
+
+            // 正常关闭（1000）不需要重连
+            if (event.code === 1000) {
+                console.log('WebSocket连接正常关闭');
+                updateConnectionStatus(false, '已断开（正常）');
+                addMessage('system', '对话已结束，连接已关闭', false, false);
+                return;
+            }
+
+            // 异常关闭，尝试重连
+            console.warn(`WebSocket连接关闭，代码: ${event.code}, 原因: ${event.reason}`);
+            updateConnectionStatus(false, `已断开（代码: ${event.code}）`);
+            addMessage('system', `连接意外断开，正在尝试重连（${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS}）...`, false, false);
+            
+            // 调度重连
+            scheduleReconnect();
+        }
+
+        /**
+         * 处理WebSocket错误事件
+         * @param {Event} error - 错误事件
+         */
+        function handleWsError(error) {
+            console.error('WebSocket错误:', error);
+            updateConnectionStatus(false, '连接错误');
+            addMessage('system', 'WebSocket连接发生错误', false, false);
+            
+            // 如果未连接且未超过重连次数，尝试重连
+            if (!isConnected && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                scheduleReconnect();
+            }
+        }
+
+        /**
+         * 调度重连
+         */
+        function scheduleReconnect() {
+            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+                console.error('已达到最大重连次数，停止尝试');
+                updateConnectionStatus(false, '重连失败（已达上限）');
+                addMessage('system', '多次重连失败，请刷新页面或检查网络后重试', false, false);
+                return;
+            }
+
+            // 延迟重连（指数退避策略）
+            const delay = RECONNECT_DELAY * Math.pow(2, reconnectAttempts);
+            setTimeout(() => {
+                reconnectAttempts++;
+                console.log(`尝试第 ${reconnectAttempts} 次重连（延迟: ${delay}ms）`);
+                initWebSocket();
+            }, delay);
+        }
+
+        /**
+         * 发送WebSocket消息
+         * @param {Object} message - 要发送的消息对象
+         * @returns {boolean} - 发送是否成功
+         */
+        function sendWsMessage(message) {
+            if (!isConnected || !webSocket || webSocket.readyState !== WebSocket.OPEN) {
+                console.error('WebSocket连接未建立，无法发送消息');
+                return false;
+            }
+
+            try {
+                webSocket.send(JSON.stringify(message));
+                return true;
+            } catch (error) {
+                console.error('发送WebSocket消息失败:', error);
+                return false;
+            }
+        }
+
+        // ========================== 消息处理 ==========================
+        /**
+         * 处理AI响应消息
+         * @param {Object} payload - 消息负载
+         */
+        function handleAiResponse(payload) {
+            // 清除"正在输入"状态
+            clearAiRespondingState();
+            
+            // 添加AI回复
+            addMessage('ai', payload.content, false, true);
+            
+            // 更新状态
+            isAiResponding = false;
+            enableInput();
+        }
+
+        /**
+         * 处理系统通知消息
+         * @param {Object} payload - 消息负载
+         */
+        function handleSystemNotice(payload) {
+            addMessage('system', payload.message, false, false);
+        }
+
+        /**
+         * 处理连接确认消息
+         * @param {Object} payload - 消息负载
+         */
+        function handleConnectionAck(payload) {
+            console.log('连接已确认，服务器信息:', payload);
+            if (payload.sessionId) {
+                currentSessionId = payload.sessionId;
+                sessionIdValue.textContent = currentSessionId;
+            }
+            
+            // 启用输入
+            enableInput();
+        }
+
+        /**
+         * 处理错误响应消息
+         * @param {Object} payload - 消息负载
+         */
+        function handleWsErrorResponse(payload) {
+            // 清除"正在输入"状态
+            clearAiRespondingState();
+            
+            addMessage('system', `错误: ${payload.message || '未知错误'}`, false, false);
+            isAiResponding = false;
+            enableInput();
+        }
+
+        // ========================== UI操作 ==========================
+        /**
+         * 添加消息到聊天容器
+         * @param {string} sender - 发送者类型 (user, ai, system)
+         * @param {string} content - 消息内容
+         * @param {boolean} isLoading - 是否为加载状态
+         * @param {boolean} isMarkdown - 是否为Markdown内容
+         * @returns {HTMLElement} - 添加的消息元素
+         */
+        function addMessage(sender, content, isLoading = false, isMarkdown = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start ${sender === 'user' ? 'justify-end' : ''} mb-4 animate-[message-enter_0.3s_ease-out]`;
+            
+            // 为用户消息添加特殊类
+            if (sender === 'user') {
+                messageDiv.classList.add('user-message');
+            }
+            
+            let avatarHtml, messageContentHtml;
+            
+            if (sender === 'user') {
+                avatarHtml = `
+                    <div class="flex-shrink-0 ml-3">
+                        <div class="w-8 h-8 rounded-full bg-neutral-300 text-neutral-600 flex items-center justify-center">
+                            <i class="fa fa-user"></i>
+                        </div>
+                    </div>
+                `;
+                messageContentHtml = `
+                    <div class="bg-primary rounded-lg p-3 max-w-[85%]">
+                        ${isMarkdown ? 
+                            `<div class="markdown-content">${DOMPurify.sanitize(marked.parse(content))}</div>` : 
+                            `<p class="text-white">${formatMessage(content)}</p>`
+                        }
+                    </div>
+                `;
+            } else if (sender === 'ai') {
+                avatarHtml = `
+                    <div class="flex-shrink-0 mr-3">
+                        <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                            <i class="fa fa-robot"></i>
+                        </div>
+                    </div>
+                `;
+                messageContentHtml = `
+                    <div class="bg-neutral-100 rounded-lg p-3 max-w-[85%]">
+                        ${isMarkdown ? 
+                            `<div class="markdown-content">${DOMPurify.sanitize(marked.parse(content))}</div>` : 
+                            `<p class="text-neutral-700">${formatMessage(content)}</p>`
+                        }
+                    </div>
+                `;
+            } else { // system
+                avatarHtml = `
+                    <div class="flex-shrink-0 mr-3">
+                        <div class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-800 flex items-center justify-center">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                    </div>
+                `;
+                messageContentHtml = `
+                    <div class="bg-yellow-50 rounded-lg p-3 max-w-[85%]">
+                        <p class="text-yellow-700">${formatMessage(content)}</p>
+                    </div>
+                `;
+            }
+            
+            // 加载状态特殊处理
+            if (isLoading) {
+                messageContentHtml = `
+                    <div class="bg-neutral-100 rounded-lg p-3 max-w-[85%]">
+                        <p class="text-neutral-700 typing-animation"></p>
+                    </div>
+                `;
+            }
+            
+            messageDiv.innerHTML = sender === 'user' ? messageContentHtml + avatarHtml : avatarHtml + messageContentHtml;
+            
+            if (isLoading) {
+                typingIndicator = chatContainer.appendChild(messageDiv);
+                return typingIndicator;
+            } else {
+                chatContainer.appendChild(messageDiv);
+                // 滚动到底部
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                return messageDiv;
+            }
+        }
+
+        /**
+         * 更新连接状态UI
+         * @param {boolean} connected - 是否连接
+         * @param {string} statusText - 状态文本
+         */
+        function updateConnectionStatus(connected, statusText) {
+            const statusTextElement = statusIndicator.querySelector('span:last-child');
+            const statusDot = statusIndicator.querySelector('span:first-child');
+            
+            // 更新主状态指示器
+            if (connected) {
+                statusTextElement.textContent = '已连接';
+                statusDot.className = 'w-2 h-2 rounded-full bg-green-500 mr-2';
+                wsStatusBadge.className = 'ws-status-badge bg-green-100 text-green-800';
+                wsStatusBadge.innerHTML = '<i class="fa fa-check-circle mr-1"></i>已连接';
+            } else {
+                statusTextElement.textContent = statusText;
+                statusDot.className = 'w-2 h-2 rounded-full bg-red-500 mr-2';
+                wsStatusBadge.className = 'ws-status-badge bg-red-100 text-red-800';
+                wsStatusBadge.innerHTML = '<i class="fa fa-exclamation-circle mr-1"></i>' + statusText;
+            }
+            
+            // 更新连接状态文本
+            connectionStatus.textContent = statusText;
+        }
+
+        /**
+         * 清除AI正在响应的状态
+         */
+        function clearAiRespondingState() {
+            if (typingIndicator && chatContainer.contains(typingIndicator)) {
+                chatContainer.removeChild(typingIndicator);
+                typingIndicator = null;
+            }
+        }
+
+        /**
+         * 格式化消息内容（处理换行）
+         * @param {string} content - 原始内容
+         * @returns {string} 格式化后的内容
+         */
+        function formatMessage(content) {
+            return content.replace(/\n/g, '<br>');
+        }
+
+        /**
+         * 启用输入控件
+         */
+        function enableInput() {
+            userInput.disabled = false;
+            sendButton.disabled = false;
+            sendButton.className = 'absolute right-3 bottom-3 p-2 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors cursor-pointer';
+            userInput.placeholder = '输入问题或指令...';
+            userInput.focus();
+        }
+
+        /**
+         * 禁用输入控件
+         */
+        function disableInput() {
+            userInput.disabled = true;
+            sendButton.disabled = true;
+            sendButton.className = 'absolute right-3 bottom-3 p-2 rounded-full bg-neutral-300 text-neutral-500 cursor-not-allowed';
+            userInput.placeholder = 'AI正在回复...';
+        }
+
+        // ========================== 输入处理 ==========================
+        /**
+         * 初始化输入框事件
+         */
+        function initInputEvents() {
+            // 自动调整输入框高度
+            userInput.addEventListener('input', function() {
+                // 保存当前光标位置
+	            const cursorPos = this.selectionStart;
+	            
+	            // 临时移除滚动和高度限制以计算正确高度
+	            this.style.height = 'auto';
+	            this.style.overflowY = 'hidden';
+	            
+	            // 计算所需高度
+	            let newHeight = this.scrollHeight;
+	            // 限制最大高度
+	            if (newHeight > 150) {
+	                newHeight = 150;
+	                this.style.overflowY = 'auto';
+	            }
+	            
+	            // 设置新高度
+	            this.style.height = newHeight + 'px';
+	            
+	            // 恢复光标位置
+	            this.selectionStart = cursorPos;
+	            this.selectionEnd = cursorPos;
+            });
+
+            // 发送按钮点击事件
+            sendButton.addEventListener('click', sendMessage);
+
+            // 输入法状态跟踪
+            let isComposing = false;
+            userInput.addEventListener('compositionstart', () => { isComposing = true; });
+            userInput.addEventListener('compositionend', () => { isComposing = false; });
+
+            // 回车键发送消息
+            userInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        /**
+         * 发送用户消息
+         */
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message || !isConnected || isAiResponding) return;
+
+            // 添加用户消息到界面
+            addMessage('user', message, false, true);
+            
+            // 清空输入框并重置高度
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            
+            // 禁用输入，标记AI正在响应
+            isAiResponding = true;
+            disableInput();
+            
+            // 添加"正在输入"状态
+            addMessage('ai', '', true);
+            
+            // 发送消息到服务器
+            const success = sendWsMessage({
+                type: MESSAGE_TYPES.USER_MESSAGE,
+                payload: {
+                    sessionId: currentSessionId,
+                    content: message,
+                    timestamp: new Date().getTime()
+                }
+            });
+
+            // 如果发送失败，清理状态
+            if (!success) {
+                clearAiRespondingState();
+                addMessage('system', '发送消息失败，请重试', false, false);
+                isAiResponding = false;
+                enableInput();
+            }
+        }
+
+        // ========================== 工具函数 ==========================
+        /**
+         * 从URL参数获取会话ID
+         * @returns {string|null} 会话ID
+         */
+        function getSessionIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('sessionId');
+        }
+
+        /**
+         * 从URL参数获取client
+         * @returns {string|null} client值
+         */
+        function getClientFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('clientName');
+        }
+
+        /**
+         * 从URL参数获取用户ID
+         * @returns {string|null} 用户ID
+         */
+        function getUcIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('ucid');
+        }
+
+        /**
+         * 生成或获取会话ID
+         */
+        function initSessionId() {
+            // 优先从URL获取，否则生成新的
+            currentSessionId = getSessionIdFromUrl() || generateSessionId();
+            sessionIdValue.textContent = currentSessionId;
+            console.log('会话ID:', currentSessionId);
+        }
+
+        /**
+         * 生成唯一会话ID
+         * @returns {string} 会话ID
+         */
+        function generateSessionId() {
+            // 使用时间戳和随机数组合生成唯一ID
+            const timestamp = Date.now().toString(36);
+            const random = Math.random().toString(36).substring(2, 10);
+            return timestamp + random;
+        }
+
+        // ========================== 窗口关闭处理 ==========================
+        window.addEventListener('beforeunload', () => {
+            if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+                webSocket.close(1000, 'User closed the page');
+            }
+        });
+    </script>
+</body>
+</html>

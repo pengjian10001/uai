@@ -1,0 +1,152 @@
+<#--传递一个名为table的JSONObject，其中包含一个list字段，是一个JSONArray，指定表中每个列的名称
+	table={
+		"list":[{"COLUMN_NAME": "id","COLUMN_COMMENT": "id"},{"COLUMN_NAME": "name","COLUMN_COMMENT": "名称"}]
+	}
+-->
+<#if (table?? && table.list??)>
+	<#assign
+		tableList=table.list![]
+	/>
+</#if>
+
+<#if (tableList?? && tableList?size>0)>
+	<#--验证必须有COLUMN_NAME和COLUMN_COMMENT两个字段，只检查第一个和最后一个元素-->
+	<#assign
+		firstline=c.sublist(tableList,0,1)[0]
+        lastline=c.sublist(tableList,tableList?size-1,tableList?size)[0]
+	/>
+	<#if !firstline['COLUMN_NAME']?? || !firstline['COLUMN_COMMENT']?? || !lastline['COLUMN_COMMENT']?? || !lastline['COLUMN_COMMENT']??>
+		<#assign
+			i=t.error(-1,'COLUMN_NAME或COLUMN_COMMENT不存在'+t.toJson(tableList))
+		/>
+	</#if>
+					<form role="form" id="data_form" method="post" action="/pages/service/service_form_insert_insert">	
+						<div class="form-group row">
+	<#--表单的方向direction，有横向transverse（即字段横向排列）和纵向portrait（即字段纵向排列）-->
+	<#--如果表单的方向direction是横向transverse-->
+	<#if direction?? && direction=='transverse'>
+						<table class="table table-striped table-bordered">
+							<thead>
+		<#--根据names来输出表头-->
+								<tr>
+		<#list tableList as line>
+									<th>${line['COLUMN_NAME']}</th>
+		</#list>
+								</tr>
+							</thead>
+							<tbody>
+		<#--默认一次新增一条-->
+		<#list 1..1 as record>
+								<tr>
+			<#--每一行，根据COLUMN_NAME取值-->
+			<#list tableList as line>
+									<#--
+										为了避免隐藏域的字段名与表单的字段名同名，而导致异常，例如，待插入的表，本身也包含名为table_name的字段，则与下面隐藏域的table_name字段同名，会导致提交插入时失败，所以，所有待插入的字段名都加上“form_”前缀。
+										而在表单提交后的service_form_insert的insert中页面需要处理这种form_前缀的逻辑
+									-->
+									<#--对文本进行html转义-->
+									<td><textarea rows="1" class="form-control" name="form_${t.escapeHtml(line['COLUMN_NAME'])}" placeholder="${t.escapeHtml(line['COLUMN_COMMENT'])}"></textarea></td>
+				<#--收集所有要更新的字段，以便于提交表单时获取到这些字段名-->
+				<#assign
+					i=t.putListParam('column_name_list',line['COLUMN_NAME'])
+				/>
+			</#list>
+								</tr>
+		</#list>
+								<tr>
+									<#--合并列的宽度为list的宽度，结果写入id为form_op_result的div中-->
+									<td colspan="${tableList?size}"><button type="submit" class="btn btn-default" id="main_submit">新  增</button><span id="form_op_result"></span></td>
+								</tr>		
+							</tbody>
+						</table>	
+	<#--如果表单的方向direction是纵向portrait-->					
+	<#else>
+						<table class="table table-striped table-bordered">
+		<#--此时不需要表头thead，而是将字段显示在第一列-->
+							<tbody>
+		<#--默认一次新增一条-->
+		<#list 1..1 as record>
+			<#--与横向不同的是，每一行是一个字段，每一行为2列，分别为COLUMN_NAME和COLUMN_COMMENT，所以，循环是放在tr之外-->
+			<#list tableList as line>
+								<tr>
+									<#--对文本进行html转义-->
+									<td>${t.escapeHtml((line['COLUMN_NAME'])?string)}</td><td><textarea rows="1" class="form-control" name="form_${t.escapeHtml((line['COLUMN_NAME'])?string)}" placeholder="${t.escapeHtml((line['COLUMN_COMMENT'])?string)}"></textarea></td>
+								</tr>
+				<#--收集所有要更新的字段，以便于提交表单时获取到这些字段名-->
+				<#assign
+					i=t.putListParam('column_name_list',line['COLUMN_NAME'])
+				/>
+			</#list>
+		</#list>
+								<tr>
+									<#--合并列的宽度固定为2，结果写入id为form_op_result的div中-->
+									<td colspan="2"><button type="submit" class="btn btn-default" id="main_submit">新  增</button><span id="form_op_result"></span></td>
+								</tr>
+							</tbody>
+						</table>
+						</div>
+		
+	</#if>
+	<#--所有情况都加上以下隐藏域，新增时需要使用-->
+	<input type="hidden" name="db_type" value="${db_type!''}"/>
+	<input type="hidden" name="db_config" value="${db_config!''}"/>
+	<input type="hidden" name="db_name" value="${db_name!''}"/>
+	<input type="hidden" name="table_name" value="${table_name!''}"/>
+	<input type="hidden" name="querysql" value="${t.escapeHtml(querysql!'')}"/>
+	<input type="hidden" name="param_config_source" value="${param_config_source!'db'}"/>
+	<#--标记表单操作类型，用于提交表单时，接口进行相应的操作-->
+	<input type="hidden" name="form_op" value="insert"/>
+	<#--所有字段，以逗号分隔-->
+	<input type="hidden" name="all_column" value="${t.toSqlIn(true,t.getParam('column_name_list')![])}"/>
+					</form>
+					
+<#else>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>table</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>返回结果为空</td>
+								</tr>
+							</tbody>
+						</table>
+					
+</#if>
+
+<script type="text/javascript">
+	commit_function = function (envent)  
+	{  
+		envent.preventDefault();  
+		var form = $(this);  
+		$.ajax({  
+			url: form.attr("action"),  
+			type: form.attr("method"), 
+			data: form.serialize(),  
+			dataType: 'html',
+			beforeSend: function ()  
+			{  
+				// 禁用按钮防止重复提交
+        		$("#main_submit").attr({ disabled: "disabled" });
+				// 加载动画
+				$("#loading").show();
+			},  
+			error: function (data)  
+			{  
+				alert("error:"+data.responseText)
+			},  
+			complete:function () { 
+				$("#main_submit").removeAttr("disabled");
+				$("#loading").hide();
+			},  
+			success: function (data)  
+			{  
+				$("#form_op_result").html(data);  
+			}  
+		}); 
+	};
+	$("#data_form").submit(commit_function);
+	
+</script>

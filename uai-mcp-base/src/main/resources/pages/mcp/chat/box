@@ -1,0 +1,213 @@
+<#assign
+	default_config={
+		"commonlog_db_config" : "mcp"
+	}
+/>
+<!DOCTYPE html>
+<html>
+<head>
+			<!--引入head-->
+			<#include "/pages/part/page_part_head">
+
+    <style type="text/css">
+    	/* sessionId渲染样式 */
+        .session-label {
+            background-color: #f5f5f5; /* 灰色背景 */
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            color: #555; /* 深灰色文字 */
+            font-size: 12px;
+            margin-left: 8px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .label-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        /* Markdown 渲染样式 */
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .markdown-body pre {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            font-size: 85%;
+            line-height: 1.45;
+            overflow: auto;
+            padding: 16px;
+        }
+        .markdown-body code {
+            background-color: rgba(175, 184, 193, 0.2);
+            border-radius: 3px;
+            font-size: 85%;
+            margin: 0;
+            padding: 0.2em 0.4em;
+        }
+        .markdown-body h1, 
+        .markdown-body h2 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        .markdown-body table {
+            border-collapse: collapse;
+            display: block;
+            overflow: auto;
+            width: 100%;
+        }
+        .markdown-body table th,
+        .markdown-body table td {
+            border: 1px solid #dfe2e5;
+            padding: 6px 13px;
+        }
+        
+    </style>	
+</head>
+
+<body>
+<#--传递screen=空，可以使整个页面全屏，默认不全屏，使用container样式-->
+<div class="${screen!'container'}">
+	<div class="row clearfix">
+		<div class="col-md-12 column magine1">
+			<!--引入导航栏nav-->
+			<#include "/pages/part/page_part_nav">
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-2 column magine1">
+			<!--引入左边栏模版-->
+			<#include "/pages/part/page_part_left_menu">
+		</div>
+		<div class="col-md-10 column magine1">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+
+					<!--请求表单-->
+					<form role="form" id="main_form" method="post" action="/pages/mcp/chat/page_query_get_ai_response">
+						<#assign
+							sessionId = sessionId!t.randomUniqueId()
+							clientName = clientName!'test-client'
+							ucid = ucid!'0'
+						/>
+						<div class="form-group">
+                             <div class="label-container">
+                                <label for="query">对话</label>
+                                <!-- 新增灰色背景的会话ID标签 -->
+                                <div class="session-label">
+                                    会话ID: ${sessionId}
+                                </div>
+                             </div>
+                             <!-- 会话ID -->
+                             <input type="hidden" name="sessionId" value="${sessionId}"/>
+                             <input type="hidden" name="clientName" value="${clientName}"/>
+                             <input type="hidden" name="ucid" value="${ucid}"/>
+							 <textarea rows="3" class="form-control" id="message" name="message" placeholder="请输入问题。也可以@某个角色，再输入问题"></textarea>
+						</div>
+						<div class="form-group row">
+						    <div class="col-sm-2" style="margin-right:inherit">
+						      	<button type="submit" class="btn btn-default" id="main_submit">提交</button>
+						    </div>	
+  						</div>						
+					</form>
+
+				</div>			
+			</div>			
+
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<label>响应</label>
+				</div>
+				<div class="col-md-12 column">
+					<div id="result_data" class="container markdown-body"></div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+<div id="loading" style="display:none" class="loading_weiyi"><img src='https://p.ke.com/v1/raw/p/coo-pkreport/08fd958fc30610fb0d1820202028013001389864.gif' /></div>
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+    // 配置Marked解析器
+    marked.setOptions({
+        highlight: function(code, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                return hljs.highlight(code, { language: lang }).value;
+            }
+            return hljs.highlightAuto(code).value;
+        },
+        breaks: true,
+        gfm: true
+    });
+
+	commit_function = function (envent)  
+	{  
+		envent.preventDefault();  
+		var form = $(this);  
+		$.ajax({  
+			url: form.attr("action"),  
+			type: form.attr("method"), 
+			data: form.serialize(),  
+			dataType: 'html',
+			beforeSend: function ()  
+			{  
+				// 禁用按钮防止重复提交
+        		$("#main_submit").attr({ disabled: "disabled" });
+				// 加载动画
+				$("#loading").show();
+			},  
+			error: function (data)  
+			{  
+				alert("error:"+data.responseText)
+			},  
+			complete:function () { 
+				$("#main_submit").removeAttr("disabled");
+				$("#loading").hide();
+			},  
+			success: function (data)  
+			{  
+				// 渲染Markdown响应
+                var markdownHtml = marked.parse(data);
+				$("#result_data").html(markdownHtml);  
+				
+				// 为代码块添加语法高亮
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+			}  
+		}); 
+	};
+	$("#main_form").submit(commit_function);
+	
+	// 页面加载时初始化
+    $(document).ready(function() {
+        // 为初始内容渲染Markdown
+        var initialContent = $("#result_data").text();
+        var initialHtml = marked.parse(initialContent);
+        $("#result_data").html(initialHtml);
+        
+        // 为代码块添加语法高亮
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightElement(block);
+        });
+    });
+
+	<#--如果message不为空，则触发点击按钮，从而实现查询页面的分享-->
+	<#if (message?? && message?length>0)>
+		<#--为了避免查询语句中一些引号等特殊字符，在此处设置值-->
+		$("#message").val("${message}");
+		$("#main_submit").click();
+	</#if>
+	
+</script>

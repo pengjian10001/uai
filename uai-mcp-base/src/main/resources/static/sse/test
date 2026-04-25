@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Jakarta SSE 客户端测试</title>
+    <style>
+        #msgContainer { margin: 20px; padding: 20px; border: 1px solid #eee; border-radius: 8px; }
+        .msg { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>📡 Jakarta SSE 实时消息接收</h1>
+    <div id="msgContainer"></div>
+
+    <script>
+        // 1. 连接 SSE 服务端（自动重连）
+        const sse = new EventSource('http://localhost:8080/commonsse/api/test');
+
+        // 2. 监听连接成功事件
+        sse.onopen = () => {
+            addMsgToPage('✅ 连接 SSE 服务端成功！', 'success');
+        };
+
+        // 3. 监听自定义事件（与服务端 event: realTimeMsg 对应）
+        sse.addEventListener('realTimeMsg', (event) => {
+            const data = JSON.parse(event.data);
+            const time = new Date(data.timestamp).toLocaleString();
+            addMsgToPage(`[${time}] 消息ID: ${data.msgId} - 内容: ${data.content}`, 'info');
+        });
+
+        // 4. 监听默认事件（服务端未指定 event 时触发）
+        sse.onmessage = (event) => {
+            addMsgToPage(`📢 默认事件：${event.data}`, 'default');
+        };
+
+        // 5. 监听连接错误事件
+        sse.onerror = (error) => {
+            if (sse.readyState === EventSource.CLOSED) {
+                addMsgToPage('❌ 连接已关闭，正在自动重连...', 'error');
+            } else {
+                addMsgToPage(`❌ 连接异常：${error.message}`, 'error');
+            }
+        };
+
+        // 6. 页面关闭时主动关闭 SSE 连接
+        window.onbeforeunload = () => {
+            sse.close();
+            addMsgToPage('🔌 主动关闭 SSE 连接', 'warn');
+        };
+
+        // 辅助函数：添加消息到页面
+        function addMsgToPage(content, type) {
+            const container = document.getElementById('msgContainer');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `msg msg-${type}`;
+            msgDiv.textContent = content;
+            container.appendChild(msgDiv);
+            // 滚动到最新消息
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+</body>
+</html>

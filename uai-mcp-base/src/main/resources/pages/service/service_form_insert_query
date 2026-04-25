@@ -1,0 +1,87 @@
+<#assign
+	<#--
+		对于db_type=mysql，通过查询information_schema.columns获取到字段的元信息，所以查询sql是固定的
+		而参数的querysql是用于查询后用jsonsql过滤用的
+		返回的meta_list格式为：
+		[{
+			"IS_NULLABLE": "NO",
+			"TABLE_CATALOG": "def",
+			"TABLE_NAME": "common_config",
+			"TABLE_SCHEMA": "merlin",
+			"EXTRA": "auto_increment",
+			"COLUMN_NAME": "id",
+			"COLUMN_KEY": "PRI",
+			"COLUMN_COMMENT": "id",
+			"NUMERIC_PRECISION": 20,
+			"PRIVILEGES": "select,insert,update,references",
+			"NUMERIC_SCALE": 0,
+			"COLUMN_TYPE": "bigint(20) unsigned",
+			"GENERATION_EXPRESSION": "",
+			"ORDINAL_POSITION": 1,
+			"DATA_TYPE": "bigint"
+		}, {
+			"IS_NULLABLE": "NO",
+			"TABLE_CATALOG": "def",
+			"TABLE_NAME": "common_config",
+			"TABLE_SCHEMA": "merlin",
+			"EXTRA": "",
+			"COLUMN_NAME": "type",
+			"COLUMN_KEY": "MUL",
+			"COLUMN_COMMENT": "类型",
+			"NUMERIC_PRECISION": 10,
+			"PRIVILEGES": "select,insert,update,references",
+			"NUMERIC_SCALE": 0,
+			"COLUMN_TYPE": "int(11)",
+			"GENERATION_EXPRESSION": "",
+			"ORDINAL_POSITION": 2,
+			"DATA_TYPE": "int",
+			"COLUMN_DEFAULT": "100"
+		}]
+	-->
+	meta_sql="select * from information_schema.columns where table_schema = ? and table_name = ?"
+	queryparam=[db_name,table_name]
+	meta_list = ds.exeDB("query", "获取数据", meta_sql, queryparam![], "query")
+	i=t.log("---meta_list-----"+t.toJson(meta_list))
+/>
+
+<#assign
+	<#--对于db_type=mysql，使用querysql，过滤查询后的字段-->
+	<#--无论是否传递querysql，都先过滤掉主键（所以，默认每个表都有一个自增主键）-->
+	<#--结果不要覆盖meta_list，因为后续还要使用-->
+	data_list=sql.jsonSqlRaw("select * from _1_ where COLUMN_KEY != 'PRI'",meta_list)
+	i=t.log("---data_list1-----"+t.toJson(data_list))
+/>
+<#if (querysql?? && querysql?length>0)>
+	<#assign
+		<#--如果传递了querysql，则调用jsonsql再执行一遍过滤-->
+		data_list=sql.jsonSqlRaw(querysql,data_list)
+		i=t.log("---data_list2-----"+t.toJson(data_list))
+	/>
+</#if>
+
+
+<#--chart_config是图形配置，如果传递了，则将其处理为一个jsonobj对象-->
+<#if (chart_config?? && chart_config?length>0)>
+	<#assign
+	  chartConfig=t.toJsonObject(chart_config)
+	/>
+</#if>
+
+
+<#if data_list?? && (data_list?size>0)>
+	<#assign
+		table={
+			"list":data_list
+		}
+		i=t.log("---table-----"+t.toJson(table))
+		tablehtml=te.parse({'table', table}, "/pages/part/page_table_part_bootstrap_table_form_insert")
+		i=t.log("---tablehtml-----"+tablehtml)
+	/>
+	${tablehtml}
+<#else>
+	<#assign
+		i=t.log("---data_size-----"+data_list?size)
+	/>
+	查询结果为空
+</#if>
+

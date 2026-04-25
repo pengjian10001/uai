@@ -1,0 +1,13 @@
+<#assign
+	i=t.check("!querysql?? || querysql?length==0", -1, "querysql为空")
+/>
+<#assign
+	table_list=s.getAndParseConfig(100, 'mixed_dao', 'query', {'db_type':db_type,'querystr':querysql,'db_config':db_config})
+/>
+<#assign
+	table={
+		"list":table_list
+	}
+	tablehtml=s.getAndParseConfig(1100, 'page_table_part_bootstrap_table', {'table', table})
+/>
+${tablehtml}

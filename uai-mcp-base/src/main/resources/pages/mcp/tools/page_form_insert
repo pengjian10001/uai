@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+			<!--引入head-->
+			<#include "/pages/part/page_part_head">
+
+	
+</head>
+
+<body>
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column magine1">
+			<!--引入导航栏nav-->
+			<#include "/pages/part/page_part_nav">
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-2 column magine1">
+			<!--引入左边栏模版-->
+			<#include "/pages/part/page_part_left_menu">
+		</div>
+		<div class="col-md-10 column magine1">
+		
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+
+					<!--使用说明-->
+					<div class="panel panel-default">
+						<div class="panel-heading">表单管理</div>
+						<div class="panel-body">
+							<p>
+							新增：往指定<b>数据库表</b>中新增一条记录<br/>
+							</p>
+						</div>
+					</div>
+					
+					
+<#assign
+	param = {
+		"querysql" : "select COLUMN_NAME,COLUMN_COMMENT from _1_ where COLUMN_KEY != 'PRI'",
+		"db_config" : "odin_plug_in_db",
+		"db_name" : "mcp",
+		"table_name" : "t_tool",
+		"direction" : "纵向",
+		"param_config_source" : "db"	
+	}
+	insert_result = te.parse(param, "/pages/service/service_form_insert_query")
+/>							
+
+				</div>			
+			</div>			
+
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<label>表单展示结果</label>
+				</div>
+				<div class="col-md-12 column">
+					<div id="result_data" class="container">
+${insert_result}
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+
+
+
+</body>
+</html>

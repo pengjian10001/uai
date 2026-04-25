@@ -1,0 +1,296 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务表单新增</title>
+    <!-- 引入jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A90E2',      // 主蓝色
+                        secondary: '#6BBBF7',    // 浅蓝
+                        accent: '#2A70B9',       // 深蓝
+                        light: '#E8F4FC',        // 超浅蓝
+                        neutral: '#F5F9FC'       // 背景色
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .form-input-focus {
+                @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all duration-300;
+            }
+            .btn-hover {
+                @apply hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
+            }
+            .card-shadow {
+                @apply shadow-md hover:shadow-lg transition-shadow duration-300;
+            }
+            .input-transition {
+                @apply transition-all duration-300;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(74, 144, 226, 0.3);
+            border-radius: 50%;
+            border-top-color: #4A90E2;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 表单提交结果动画 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 移除原表格样式冲突 */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        
+        .table-bordered {
+            border: none;
+        }
+        
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-neutral font-inter min-h-screen p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- 表单标题 -->
+        <div class="mb-8 text-center">
+            <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800 mb-2 flex items-center justify-center">
+                <i class="fa fa-code-fork text-primary mr-3"></i>
+                方法信息表单
+            </h2>
+            <p class="text-gray-600">请填写以下信息，完成后点击新增按钮提交</p>
+        </div>
+        
+        <!-- 表单卡片 -->
+        <div class="bg-white rounded-xl p-6 md:p-8 card-shadow rounded-lg">
+            <form role="form" id="data_form" method="post" action="insert_response" class="space-y-6">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full">
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-cubes text-primary mr-2"></i>model
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="1" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_model" placeholder="模块名（可作为方法分类，也可看场Class名）"></textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-tags text-primary mr-2"></i>type
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="1" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_type" placeholder="类型，默认值为0，表示无类型">0</textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-font text-primary mr-2"></i>name
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="1" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_name" placeholder="方法名，必需符合程序名的规范，不能为中文。"></textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-file-text text-primary mr-2"></i>description
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="1" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_description" placeholder="方法描述"></textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-code text-primary mr-2"></i>param_schema
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="3" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_param_schema" placeholder="参数json schema">{}</textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-code text-primary mr-2"></i>return_class
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="3" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_return_class" placeholder="返回值的类型。是一个java类型，具体参照https://docs.langchain4j.dev/tutorials/ai-services定义Agent返回值类型"></textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-code text-primary mr-2"></i>return_script
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="3" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_return_script" placeholder="处理返回值的脚本"></textarea>
+                                </td>
+                            </tr>                                                
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-database text-primary mr-2"></i>datasource_desc
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="1" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_datasource_desc" placeholder="数据源的dataSourceDesc配置">{}</textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-cog text-primary mr-2"></i>datasource_config
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="3" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_datasource_config" placeholder="数据源的dataSourceDesc配置">{}</textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-toggle-on text-primary mr-2"></i>state
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="1" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_state" placeholder="是否有效，0为有效，1为无效">0</textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-light/50 transition-colors duration-300">
+                                <td class="py-4 pr-4 w-1/4 text-gray-700 font-medium">
+                                    <i class="fa fa-refresh text-primary mr-2"></i>version
+                                </td>
+                                <td class="py-4">
+                                    <textarea rows="1" class="form-control w-full px-4 py-3 rounded-lg border border-gray-300 form-input-focus bg-white input-transition" 
+                                            name="form_version" placeholder="方法版本"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="py-6 text-center">
+                                    <button type="submit" class="bg-primary text-white font-medium py-3 px-8 rounded-lg flex items-center justify-center btn-hover mx-auto" id="main_submit">
+                                        <i class="fa fa-plus-circle mr-2"></i>新 增
+                                    </button>
+                                    <div id="form_op_result" class="mt-4 fade-in"></div>
+                                    <div id="loading" class="hidden mt-4 flex justify-center">
+                                        <span class="loading"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <input type="hidden" name="all_column" value="model,type,name,description,param_schema,return_class,return_script,datasource_desc,datasource_config,state,version">
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // 页面加载完成后执行
+        $(document).ready(function() {
+            // 表单提交处理函数
+            commit_function = function(event) {  
+                event.preventDefault();  
+                var form = $(this);  
+                
+                $.ajax({  
+                    url: form.attr("action"),  
+                    type: form.attr("method"), 
+                    data: form.serialize(),  
+                    dataType: 'html',
+                    beforeSend: function() {  
+                        // 禁用按钮防止重复提交
+                        $("#main_submit").attr("disabled", "disabled").addClass("opacity-75 cursor-not-allowed");
+                        // 显示加载动画
+                        $("#loading").show();
+                        $("#form_op_result").html('');
+                    },  
+                    error: function(data) {  
+                        // 隐藏加载动画
+                        $("#loading").hide();
+                        // 显示错误信息
+                        $("#form_op_result").html(
+                            '<div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded fade-in">' +
+                            '<p><i class="fa fa-exclamation-circle mr-2"></i>提交失败：' + (data.responseText || '服务器错误') + '</p>' +
+                            '</div>'
+                        );
+                    },  
+                    complete:function() { 
+                        // 恢复按钮状态
+                        $("#main_submit").removeAttr("disabled").removeClass("opacity-75 cursor-not-allowed");
+                        // 隐藏加载动画
+                        $("#loading").hide();
+                    },  
+                    success: function(data) {  
+                        // 显示成功信息
+                        $("#form_op_result").html(
+                            '<div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded fade-in">' +
+                            '<p><i class="fa fa-check-circle mr-2"></i>提交成功：' + data + '</p>' +
+                            '</div>'
+                        );
+                        
+                        // 5秒后清空成功信息
+                        setTimeout(function() {
+                            $("#form_op_result").html('');
+                        }, 5000);
+                    }  
+                }); 
+            };
+            
+            // 绑定表单提交事件
+            $("#data_form").submit(commit_function);
+            
+            // 输入框获取/失去焦点效果
+            $('.form-control').focus(function() {
+                $(this).parent().addClass('scale-[1.01] transition-transform duration-300');
+            }).blur(function() {
+                $(this).parent().removeClass('scale-[1.01]');
+            });
+        });
+    </script>
+
+    <div id="automa-palette"></div>
+    <div id="loading" style="display:none" class="loading"><img src='/static/img/loading.gif' /></div>
+</body>
+</html>
+    

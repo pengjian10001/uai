@@ -1,0 +1,6 @@
+<#--示例：curl -X POST 'http://localhost:8080/pages/rag/embed' -H 'Content-Type: application/json' --data '{"texts":["中国","你好"]}'-->
+<#assign
+	texts = texts![]
+	result=embed.embedAsyn(t.toList(texts))
+/>
+${t.toJson(result)}

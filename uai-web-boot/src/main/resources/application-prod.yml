@@ -1,0 +1,22 @@
+logging:
+  level:
+    root: INFO
+    org:
+      springframework: INFO
+
+spring:
+  # ubag的依赖，不能去掉
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://m10827.mars.test.mysql.ljnode.com:10827/odin?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 2CB47bFA34
+
+#数据库配置用的是这里
+mysql:
+  datasource:
+    url: m6308.atlas.mysql.ljnode.com:6308
+    username: data_push
+    password: O0Png7Eb3FUBdXD3
+
+
