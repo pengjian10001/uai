@@ -25,6 +25,7 @@
 		<module>uai-rag</module>
 		<module>uai-mcp-base</module>
 		<module>uai-graph</module>
+		<module>uai-example</module>
 		<module>uai-mcp-server</module>
 		<module>uai-web-boot</module>
 	</modules>

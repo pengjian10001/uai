@@ -8,10 +8,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>uai-mcp-base</artifactId>
+	<artifactId>uai-example</artifactId>
 	<packaging>jar</packaging>
 
-	<name>uai-mcp-base</name>
+	<name>uai-example</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -123,33 +123,11 @@
                 </exclusion>
             </exclusions>
 		</dependency>
-		
 		<dependency>
-			<groupId>com.uni.ubag</groupId>
-			<artifactId>ubag-util</artifactId>
-			<version>2.0-SNAPSHOT</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>2.0.17</version> <!-- 请使用最新稳定版本 -->
 		</dependency>
-
-		<!--支持Prompt中${var}解析-->
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-			<version>2.3.34</version>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-
-		<!--支持chatMemory中消息的序列化和反序列化为json时的特殊符号处理-->
-		<dependency>
-			<groupId>com.mikesamuel</groupId>
-			<artifactId>json-sanitizer</artifactId>
-			<version>1.2.3</version>
-		</dependency>
-
-
 
 	</dependencies>
 

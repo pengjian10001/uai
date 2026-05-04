@@ -1,11 +1,8 @@
-package com.uni.uai.mcp.llm;
+package com.uni.uai.example.llm;
 
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import com.uni.uai.mcp.llm.listener.MyChatModelListener;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
