@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Openclaw Skill 线上商店 · 静态 Demo</title>
+  <style>
+    :root { color-scheme: dark light; --bg: #0b0f14; --card: #151c28; --accent: #5eb3ff; --muted: #8b9cb3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: #e8eef7; min-height: 100vh; }
+    header { padding: 1.5rem; border-bottom: 1px solid #243044; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.35rem; }
+    .sub { color: var(--muted); font-size: 0.9rem; }
+    main { max-width: 920px; margin: 0 auto; padding: 1.5rem; }
+    .hero { background: linear-gradient(135deg, #1a2740, #121a28); border: 1px solid #2a3a52; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .card { background: var(--card); border-radius: 10px; padding: 1.1rem; border: 1px solid #2a3a52; }
+    .card h2 { margin: 0 0 0.4rem; font-size: 1rem; color: var(--accent); }
+    .card p { margin: 0; font-size: 0.88rem; color: #c5d0e0; line-height: 1.5; }
+    .meta { margin-top: 0.75rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+    .price { color: #7ee787; font-weight: 600; }
+    .tag { background: #243044; color: #9db7ff; padding: 0.15rem 0.5rem; border-radius: 6px; }
+    footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Openclaw Skill 线上商店</h1>
+    <p class="sub">单页静态 Demo · 可直接用浏览器打开本文件（部署时上传到任意静态站点或对象存储即可）</p>
+  </header>
+  <main>
+    <section class="hero">
+      <strong>精选 Skill</strong>
+      <p class="sub" style="margin:0.5rem 0 0;">浏览、购买与管理 Openclaw 生态中的自动化 Skill（本页为演示数据）。</p>
+    </section>
+    <div class="grid">
+      <article class="card">
+        <h2>Skill · 代码审查</h2>
+        <p>在 PR 上运行静态分析与风格检查，输出可操作的评论。</p>
+        <div class="meta"><span class="tag">生产力</span><span class="price">¥12/月</span></div>
+      </article>
+      <article class="card">
+        <h2>Skill · 发布说明</h2>
+        <p>根据 commit 与 issue 自动生成多语言 Release Notes。</p>
+        <div class="meta"><span class="tag">文档</span><span class="price">免费</span></div>
+      </article>
+      <article class="card">
+        <h2>Skill · 值班摘要</h2>
+        <p>聚合告警与 on-call 记录，生成每日简报推送到 IM。</p>
+        <div class="meta"><span class="tag">运维</span><span class="price">¥29/月</span></div>
+      </article>
+      <article class="card">
+        <h2>Skill · 合规扫描</h2>
+        <p>对依赖与配置进行许可证与密钥泄露扫描。</p>
+        <div class="meta"><span class="tag">安全</span><span class="price">¥39/月</span></div>
+      </article>
+    </div>
+  </main>
+  <footer>com.uni.uai.demo.agent · OpenclawSkillStoreHtmlDemo 配套静态页</footer>
+</body>
+</html>
