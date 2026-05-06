@@ -9,7 +9,7 @@
 
 ## 整体设计思路
 
-本 Demo 用 **LangChain4j Agentic** 搭了一条「类 CI/CD + 人工门禁」的迷你流水线，映射岗位题中的 **「AI 自主开发系统」**：机器侧步骤尽量 **确定性、可重复**（省 token、易演示），人在环上只做一个 **高风险操作确认**（是否写磁盘）。
+本 Demo 用 **LangChain4j Agentic** 搭了一条「类 CI/CD + 人工门禁」的迷你流水线，模拟实现一个简单的 **「AI 自主开发系统」**：机器侧步骤尽量 **确定性、可重复**（省 token、易演示），人在环上只做一个 **高风险操作确认**（是否写磁盘）。
 
 - **共享状态（AgenticScope）**：用字符串键在各步之间传递产物与决策，例如 `request` / `targetDir` 作为输入，`code`（HTML 源码）、`allow`（是否同意写入）、`file`（落盘路径）、`check`（mock 浏览器结论）作为中间与结束信号；若启用需求解析，还会经过 **`analysisJson`**（LLM  Raw JSON）与 **`maxLoopIterations`**（循环上限，可被解析结果覆盖）。
 - **编排形态**：顶层 **顺序**（**可选** LLM 需求解析 → **合并解析结果** → 模板生成 HTML → 征得同意 → **循环**）；循环内 **顺序**（先写文件再 mock 校验）。可选解析参照 **`TestOptional`**：`OpenclawRequestAnalyst` 标记 `optional(true)`，仅当入参中包含 **`rawUserRequest`** 时才执行，否则会跳过（与缺少 `audience` 时跳过 `AudienceEditor` 同理）。
@@ -27,7 +27,7 @@
 | **合并解析结果** | **否（本地正则解析）** | **间接使用** | `OpenclawApplyLlmAnalysis` 为 **Non-AI**，读取 **`analysisJson`**，解析后覆盖 **`request`**（网页标题），并向 scope **`writeState("maxLoopIterations", …)`**；不再次调用模型。 |
 | 商店 HTML 正文 | **是（模板 Mock）** | **否** | `OpenclawStoreHtmlGenerator` 用固定模板 + `request` 标题拼页面，无 `ChatModel`。 |
 | 写入磁盘 | **否（真实 I/O）** | **否** | `OpenclawStoreFileWriter` 在用户同意后用 `java.nio.file` 真实写入。 |
-| 「浏览器」加载与校验 | **是（Mock）** | **否** | `OpenclawBrowserMockAgent` 仅读本地文件，用 **调用次数** 模拟前两次失败、第三次成功。 |
+| 「浏览器」加载与校验 | **是（Mock）** | **否** | `OpenclawBrowserMockAgent` 仅读本地文件，用 **调用次数 + `maxLoopIterations`** 动态决定何时成功（不再固定第 3 次）。 |
 | 是否同意写入 | **否（真人输入）** | **否** | `HumanInTheLoop` 从 **标准输入** 读 `yes`/`no`。 |
 | LangChain4j 编排与监控 | 框架能力 | **否** | 编排本身不调模型；**唯一绑定 LLM 的子 Agent 即上述 `OpenclawRequestAnalyst`**。 |
 

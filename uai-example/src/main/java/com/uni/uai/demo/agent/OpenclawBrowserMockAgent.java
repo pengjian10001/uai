@@ -6,10 +6,12 @@ import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.agentic.scope.AgenticScope;
 import dev.langchain4j.service.V;
 
 /**
- * 非 AI Agent：mock「浏览器加载」——读取已写入的 HTML 文件；第 1、2 次调用返回错误，第 3 次返回 success。
+ * 非 AI Agent：mock「浏览器加载」——读取已写入的 HTML 文件；
+ * 按 maxLoopIterations 动态决定第几次返回 success。
  */
 public class OpenclawBrowserMockAgent {
 
@@ -25,10 +27,10 @@ public class OpenclawBrowserMockAgent {
     }
 
     @Agent(
-            value = "Mock 浏览器：加载本地 HTML 并校验（前两次失败，第三次成功）",
+            value = "Mock 浏览器：按 maxLoopIterations 动态校验并返回结果",
             outputKey = "check"
     )
-    public String mockBrowserLoad(@V("allow") String allow, @V("file") String filePath) {
+    public String mockBrowserLoad(AgenticScope scope, @V("allow") String allow, @V("file") String filePath) {
         System.out.println("[OpenclawBrowserMockAgent] 开始 mock 浏览器校验，allow=" + allow + ", file=" + filePath);
         if (!isYes(allow)) {
             System.out.println("[OpenclawBrowserMockAgent] 用户未同意写入，设置 check=user_declined 并结束");
@@ -39,17 +41,20 @@ public class OpenclawBrowserMockAgent {
             return "error: file path empty";
         }
         int n = BROWSER_INVOCATIONS.incrementAndGet();
+        int successAt = readSuccessAttempt(scope);
         System.out.println("[OpenclawBrowserMockAgent] 第 " + n + " 次 mock 调用（读取文件校验）");
         try {
+            System.out.println("[OpenclawBrowserMockAgent] 模拟执行过程 sleep 1000ms");
+            Thread.sleep(1000L);
             String content = Files.readString(Path.of(filePath), StandardCharsets.UTF_8);
             int len = content.length();
             System.out.println("[OpenclawBrowserMockAgent] 已读取文件，长度=" + len);
-            if (n < 3) {
-                String err = "error: mock browser warmup failed (attempt " + n + ", need 3 for success)";
+            if (n < successAt) {
+                String err = "error: mock browser warmup failed (attempt " + n + ", need " + successAt + " for success)";
                 System.out.println("[OpenclawBrowserMockAgent] " + err);
                 return err;
             }
-            System.out.println("[OpenclawBrowserMockAgent] 第三次调用，mock 校验通过 -> success");
+            System.out.println("[OpenclawBrowserMockAgent] 第 " + n + " 次达到 success 条件(" + successAt + ")，mock 校验通过 -> success");
             return "success";
         } catch (Exception e) {
             String err = "error: read failed — " + e.getMessage();
@@ -64,5 +69,21 @@ public class OpenclawBrowserMockAgent {
         }
         String t = allow.trim();
         return t.equalsIgnoreCase("yes") || t.equalsIgnoreCase("y");
+    }
+
+    private static int readSuccessAttempt(AgenticScope scope) {
+        int fallback = 3;
+        Object raw = scope.readState("maxLoopIterations", fallback);
+        int parsed = fallback;
+        if (raw instanceof Number number) {
+            parsed = number.intValue();
+        } else if (raw != null) {
+            try {
+                parsed = Integer.parseInt(String.valueOf(raw).trim());
+            } catch (NumberFormatException ignored) {
+                parsed = fallback;
+            }
+        }
+        return Math.max(1, parsed);
     }
 }
