@@ -1,6 +1,7 @@
 package com.uni.uai.demo.agent;
 
 import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.agentic.scope.AgenticScope;
 import dev.langchain4j.service.V;
 
 /**
@@ -12,7 +13,12 @@ public class OpenclawStoreHtmlGenerator {
             value = "Openclaw Skill 商店页面生成（mock，不调用大模型）",
             outputKey = "code"
     )
-    public String generateStoreHtml(@V("request") String userRequest) {
+    public String generateStoreHtml(AgenticScope scope, @V("request") String userRequest) {
+        String existingCode = String.valueOf(scope.readState("code", ""));
+        if (existingCode != null && !existingCode.isBlank()) {
+            System.out.println("[OpenclawStoreHtmlGenerator] 检测到已有 key=code，保留现有代码并跳过重置模板");
+            return existingCode;
+        }
         System.out.println("[OpenclawStoreHtmlGenerator] 开始生成 HTML，用户请求标题: " + userRequest);
         String title = userRequest == null || userRequest.isBlank() ? "Openclaw Skill 商店" : userRequest.trim();
         String safe = escapeHtml(title);

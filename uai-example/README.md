@@ -1,9 +1,10 @@
 # uai-example · Demo 说明
 
-本模块在 `com.uni.uai.demo.agent` 下提供两个与「Openclaw Skill 线上商店」评估场景相关的 Demo：
+本模块在 `com.uni.uai.demo.agent` 与 `com.uni.uai.demo.openclaw` 下提供与 OpenClaw / LangChain4j 相关的 Demo：
 
 1. **AI 自主开发系统 Demo**（LangChain4j Agentic 流水线，以 Non-AI Agent 与 mock 为主）
 2. **Openclaw Skill 线上商店单页静态 Demo**（独立 HTML + 导出脚本）
+3. **OpenClaw 双 Skill HTTP 网关**（财务 / 分析各一个入口，子意图在 Java 侧 LangChain4j 路由，见下文「Demo 3」）
 
 ---
 
@@ -12,7 +13,7 @@
 本 Demo 用 **LangChain4j Agentic** 搭了一条「类 CI/CD + 人工门禁」的迷你流水线，模拟实现一个简单的 **「AI 自主开发系统」**：机器侧步骤尽量 **确定性、可重复**（省 token、易演示），人在环上只做一个 **高风险操作确认**（是否写磁盘）。
 
 - **共享状态（AgenticScope）**：用字符串键在各步之间传递产物与决策，例如 `request` / `targetDir` 作为输入，`code`（HTML 源码）、`allow`（是否同意写入）、`file`（落盘路径）、`check`（mock 浏览器结论）作为中间与结束信号；若启用需求解析，还会经过 **`analysisJson`**（LLM  Raw JSON）与 **`maxLoopIterations`**（循环上限，可被解析结果覆盖）。
-- **编排形态**：顶层 **顺序**（**可选** LLM 需求解析 → **合并解析结果** → 模板生成 HTML → 征得同意 → **循环**）；循环内 **顺序**（先写文件再 mock 校验）。可选解析参照 **`TestOptional`**：`OpenclawRequestAnalyst` 标记 `optional(true)`，仅当入参中包含 **`rawUserRequest`** 时才执行，否则会跳过（与缺少 `audience` 时跳过 `AudienceEditor` 同理）。
+- **编排形态（已优化）**：顶层 **顺序**（**可选** LLM 需求解析 → **合并解析结果** → **初始化 HTML（一次）** → 征得同意 → **循环**）；循环内 **顺序**为 **浏览器检查 → 代码调整 → 写入磁盘**。可选解析参照 **`TestOptional`**：`OpenclawRequestAnalyst` 标记 `optional(true)`，仅当入参中包含 **`rawUserRequest`** 时才执行，否则会跳过（与缺少 `audience` 时跳过 `AudienceEditor` 同理）。
 - **循环退出**：`check` 为 `success` / `user_declined` 时结束；或 **`loopCounter` 达到 `maxLoopIterations`**（默认 `10`，可被 LLM 解析覆盖并夹在 `[3,50]`，`loopBuilder.maxIterations(100)` 仅作框架硬上限）。
 - **可观测性**：`AgentMonitor` 挂在外层顺序 Agent 上，记录调用树；结束后用 `HtmlReportGenerator` 落一份 HTML，可展示「不是黑盒脚本，而是可观测的 Agent 拓扑与执行轨迹」。
 - **与真实系统的差距（诚实边界）**：HTML 正文仍来自 **模板 mock**，「浏览器」为 **mock**；唯一可调 **真实 ChatModel** 的环节是可选的 **`OpenclawRequestAnalyst`**（解析需求）。把校验换成 headless / E2E、把生成换成 LLM，都属于替换实现而少改编排。
@@ -25,9 +26,9 @@
 |------|-------------|---------------------|------|
 | **需求解析（可选）** | **否（调用真实 ChatModel）** | **是** | `OpenclawRequestAnalyst` 为 **AI Agent（接口）**，经 `AgenticServices.agentBuilder(...).chatModel(ChatModelFactory…)` 绑定模型；仅当入参含 **`rawUserRequest`** 时执行（`optional(true)`）。模型须输出仅含 `pageTitle`、`maxLoopIterations` 的 JSON 字符串，写入 **`analysisJson`**。 |
 | **合并解析结果** | **否（本地正则解析）** | **间接使用** | `OpenclawApplyLlmAnalysis` 为 **Non-AI**，读取 **`analysisJson`**，解析后覆盖 **`request`**（网页标题），并向 scope **`writeState("maxLoopIterations", …)`**；不再次调用模型。 |
-| 商店 HTML 正文 | **是（模板 Mock）** | **否** | `OpenclawStoreHtmlGenerator` 用固定模板 + `request` 标题拼页面，无 `ChatModel`。 |
+| 商店 HTML 正文（初始化） | **是（模板 Mock）** | **否** | `OpenclawStoreHtmlGenerator` 用固定模板 + `request` 标题拼页面，无 `ChatModel`；放在循环外做一次初始化。 |
 | 写入磁盘 | **否（真实 I/O）** | **否** | `OpenclawStoreFileWriter` 在用户同意后用 `java.nio.file` 真实写入。 |
-| 「浏览器」加载与校验 | **是（Mock）** | **否** | `OpenclawBrowserMockAgent` 仅读本地文件，用 **调用次数 + `maxLoopIterations`** 动态决定何时成功（不再固定第 3 次）。 |
+| 「浏览器」加载与校验 | **是（Mock）** | **否** | `OpenclawBrowserMockAgent` 优先读 `code`（无则回退 `file`），用 **调用次数 + `maxLoopIterations`** 动态决定何时成功（不再固定第 3 次）。 |
 | 是否同意写入 | **否（真人输入）** | **否** | `HumanInTheLoop` 从 **标准输入** 读 `yes`/`no`。 |
 | LangChain4j 编排与监控 | 框架能力 | **否** | 编排本身不调模型；**唯一绑定 LLM 的子 Agent 即上述 `OpenclawRequestAnalyst`**。 |
 
@@ -43,8 +44,9 @@
 | **`OpenclawRequestAnalyst`** | **AI Agent（接口，`optional(true)`）**：对大模型发起调用，将自然语言摘要为 JSON（`pageTitle`、`maxLoopIterations`），输出键 **`analysisJson`**；入参缺 **`rawUserRequest`** 时整步跳过（对齐 **`TestOptional`**）。 |
 | **`OpenclawApplyLlmAnalysis`** | **Non-AI Agent（类）**：读取 **`analysisJson`**（可为空）；解析 JSON，写入 **`request`**（网页标题）并通过 **`AgenticScope.writeState`** 写入 **`maxLoopIterations`**；无模型调用。 |
 | **`OpenclawStoreHtmlGenerator`** | **Non-AI Agent（类）**：根据 **`request`** 生成单页商店 HTML（模板 mock），结果写入 **`code`**。 |
+| **`OpenclawCodeAdjuster`** | **Non-AI Agent（类）**：读取 **`check`** 与 **`code`**；当检查失败时按失败信息 mock 调整代码并覆盖 **`code`**，成功时保持原样。 |
 | **`OpenclawStoreFileWriter`** | **Non-AI Agent（类）**：读 **`allow`** / **`code`** / **`targetDir`**；仅在同意时写入 `openclaw-skill-store-generated.html`，路径写入 **`file`**。 |
-| **`OpenclawBrowserMockAgent`** | **Non-AI Agent（类）**：mock「浏览器」；读 **`file`**；第 1、2 次调用返回错误文案，第 3 次 **`success`**，写入 **`check`**；`main` 调 **`resetInvocationCounterForDemo()`**。 |
+| **`OpenclawBrowserMockAgent`** | **Non-AI Agent（类）**：mock「浏览器」；读 **`code`**（必要时回退 `file`）；在未达到阈值时返回失败信息，达到 `maxLoopIterations` 对应轮次时返回 **`success`**，写入 **`check`**；`main` 调 **`resetInvocationCounterForDemo()`**。 |
 | **`OpenclawSkillStoreHtmlDemo`** | **独立入口**：与 Agent 流水线无关；复制 classpath 静态 HTML 到本地（默认 `target/`）。 |
 
 **关联资源（非 Java 类）**：`src/main/resources/demo/openclaw-skill-store-demo.html` — 预置的单页商店静态页，由 `OpenclawSkillStoreHtmlDemo` 导出。
@@ -69,6 +71,7 @@ flowchart TB
   subgraph agents["本包 Non-AI Agent 类"]
     OALA["OpenclawApplyLlmAnalysis"]
     OHG["OpenclawStoreHtmlGenerator"]
+    OCA["OpenclawCodeAdjuster"]
     OFW["OpenclawStoreFileWriter"]
     OBM["OpenclawBrowserMockAgent"]
   end
@@ -97,18 +100,21 @@ flowchart TB
   SEQ --> OHG
   SEQ --> HITL
   SEQ --> LOOP
-  LOOP --> OFW
   LOOP --> OBM
+  LOOP --> OCA
+  LOOP --> OFW
   ORA --> Ka
   OALA --> K1
   OHG --> K2
   HITL --> K3
   OFW --> K4
   OBM --> K5
+  OCA --> K2
   OFW -.->|读取| K2
   OFW -.->|读取| K3
-  OBM -.->|读取| K3
+  OBM -.->|读取| K2
   OBM -.->|读取| K4
+  OCA -.->|读取| K5
   OAD --> REP
   MON --> REP
 
@@ -116,7 +122,7 @@ flowchart TB
   OSH --> DISK["本地导出目录 e.g. target/"]
 ```
 
-**Java 编译期依赖**：`OpenclawAutonomousDevDemo` 依赖 **`OpenclawRequestAnalyst`（接口 + langchain4j `ChatModelFactory`）**、三个 Non-AI 类实例及 LangChain4j；各 `@Agent` 业务类 **互不 import**；`OpenclawSkillStoreHtmlDemo` 独立。
+**Java 编译期依赖**：`OpenclawAutonomousDevDemo` 依赖 **`OpenclawRequestAnalyst`（接口 + langchain4j `ChatModelFactory`）**、四个 Non-AI 类实例及 LangChain4j；各 `@Agent` 业务类 **互不 import**；`OpenclawSkillStoreHtmlDemo` 独立。
 
 ```mermaid
 classDiagram
@@ -124,6 +130,7 @@ classDiagram
   OpenclawAutonomousDevDemo ..> OpenclawRequestAnalyst : agentBuilder + optional
   OpenclawAutonomousDevDemo ..> OpenclawApplyLlmAnalysis : new / subAgents
   OpenclawAutonomousDevDemo ..> OpenclawStoreHtmlGenerator : subAgents
+  OpenclawAutonomousDevDemo ..> OpenclawCodeAdjuster : loop subAgents
   OpenclawAutonomousDevDemo ..> OpenclawStoreFileWriter : loop subAgents
   OpenclawAutonomousDevDemo ..> OpenclawBrowserMockAgent : loop subAgents
   class OpenclawSkillStoreHtmlDemo
@@ -132,7 +139,7 @@ classDiagram
 
 **读图要点**：
 
-- **`OpenclawAutonomousDevDemo`** 组装 **SEQ（Analyst → Merge → 生成 → HITL → LOOP）** + **MON + REP**；Analyst 为 **可选**（无 `rawUserRequest` 则跳过）。
+- **`OpenclawAutonomousDevDemo`** 组装 **SEQ（Analyst → Merge → 生成(一次) → HITL → LOOP）** + **MON + REP**；LOOP 内部为 **检查 → 调整 → 写盘**；Analyst 为 **可选**（无 `rawUserRequest` 则跳过）。
 - **`OpenclawSkillStoreHtmlDemo`** 与左侧流水线 **并行、独立**。
 - **状态键**：`analysisJson` 仅在有 Analyst 时出现；`maxLoopIterations` 可由 **`OpenclawApplyLlmAnalysis`** 写入；其余同前。
 
@@ -149,7 +156,7 @@ classDiagram
 
 ## Demo 1：`OpenclawAutonomousDevDemo`
 
-模拟「**可选：LLM 解析需求** → 合并默认值 → 生成商店 HTML → 工程师确认是否落盘 → 写入磁盘 → mock 浏览器校验 → **循环直至 `check=success` 或达到 `maxLoopIterations`**」，并集成 `AgentMonitor` + `HtmlReportGenerator`（与 `TestAgentMonitor` 相同思路）。
+模拟「**可选：LLM 解析需求** → 合并默认值 → 生成商店 HTML（一次） → 工程师确认是否落盘 → **循环执行（浏览器校验 → 代码调整 → 写入磁盘）**，直至 `check=success` 或达到 `maxLoopIterations`」，并集成 `AgentMonitor` + `HtmlReportGenerator`（与 `TestAgentMonitor` 相同思路）。
 
 ### 命令行约定与操作流程
 
@@ -211,7 +218,7 @@ java -cp "target/classes:$(cat cp.txt)" com.uni.uai.demo.agent.OpenclawAutonomou
 - 生成的 HTML：`{目标目录}/openclaw-skill-store-generated.html`
 - Agent 调用可视化报告：当前工作目录下的 `openclaw-autodev-report.html`
 
-流水线中框架组件 **`HumanInTheLoop`**（`outputKey=allow`）与 **`loopBuilder`** 子工作流（顺序「写入 → mock 浏览器」，直到 `check` 为 `success` 或 `user_declined`）的说明已并入上文表格与示意图。关键步骤会在控制台打印 `[OpenclawStore…]` / `[AgentStep]` 等日志。
+流水线中框架组件 **`HumanInTheLoop`**（`outputKey=allow`）与 **`loopBuilder`** 子工作流（顺序「浏览器校验 → 代码调整 → 写入磁盘」，直到 `check` 为 `success` 或 `user_declined`）的说明已并入上文表格与示意图。关键步骤会在控制台打印 `[OpenclawStore…]` / `[AgentStep]` 等日志。
 
 ## Demo 2：`OpenclawSkillStoreHtmlDemo`
 
@@ -227,8 +234,81 @@ java -cp "target/classes:$(cat cp.txt)" com.uni.uai.demo.agent.OpenclawSkillStor
 
 `导出目录` 可选，默认为 `target`。
 
+---
+
+## Demo 3：OpenClaw 双 Skill 网关（`com.uni.uai.demo.openclaw`）
+
+### 要解决什么问题
+
+在 OpenClaw 侧把 **粗粒度能力** 配成少量 Skill（例如「财务」「数据分析」），每个 Skill 只调用本工程暴露的 **一个稳定 HTTP 入口**。报销、对账、报表或趋势、摘要、对比等 **细粒度意图** 放在 LangChain4j 里路由（与 **`uai-mcp-base`** 模块下 `com.uni.uai.mcp.skill.example` 中「模型 + 工具 / 分类」同一思路；意图接口写法对齐 `com.uni.uai.example.agent.CategoryRouter` 的「单次调用、枚举式输出」）。
+
+这样 **改细分逻辑只需重启本 Java 进程**（或热部署到 Spring），**不必频繁改 OpenClaw 的 Skill 清单**。
+
+### 实现逻辑（简要）
+
+| 层级 | 职责 |
+|------|------|
+| OpenClaw | 两个 Skill → `POST /api/openclaw/finance` 与 `POST /api/openclaw/analysis`，请求体 `{"query":"用户原话"}` |
+| `OpenclawSkillGatewayServer` | JDK `HttpServer` 监听 `127.0.0.1`（默认端口 `19090`），转发到对应 Demo |
+| `OpenclawFinanceSkillDemo` / `OpenclawAnalysisSkillDemo` | `useLlm=true` 时用 `AiServices` + `FinanceIntentClassifier` / `AnalysisIntentClassifier` 调模型得到子意图；失败或 `useLlm=false` 时用 `OpenclawSkillIntentFallback` 关键词路由 |
+| 响应 JSON | `skill`、`subIntent`、`routing`（`langchain4j-llm` 或 `langchain4j-heuristic`）、`message`（Demo 说明文案）、`echoQuery` |
+
+相关类：`OpenclawSkillGatewayServer`、`OpenclawFinanceSkillDemo`、`OpenclawAnalysisSkillDemo`、`FinanceIntentClassifier`、`AnalysisIntentClassifier`、`OpenclawSkillIntentFallback`。
+
+### 运行网关
+
+```bash
+cd uai-example
+mvn -q compile -DskipTests
+mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt
+# 默认 19090；仅关键词路由、不调用 LLM（适合离线联调 OpenClaw）
+UAI_OPENCLAW_SKILL_USE_LLM=false java -cp "target/classes:$(cat cp.txt)" com.uni.uai.demo.openclaw.OpenclawSkillGatewayServer
+# 指定端口：参数或环境变量 UAI_OPENCLAW_GATEWAY_PORT
+UAI_OPENCLAW_SKILL_USE_LLM=false java -cp "target/classes:$(cat cp.txt)" com.uni.uai.demo.openclaw.OpenclawSkillGatewayServer 19100
+```
+
+### 调用示例（curl）
+
+```bash
+curl -sS -X POST http://127.0.0.1:19090/api/openclaw/finance \
+  -H 'Content-Type: application/json; charset=utf-8' \
+  -d '{"query":"帮忙核对一下本月银行流水和总账差异"}'
+
+curl -sS -X POST http://127.0.0.1:19090/api/openclaw/analysis \
+  -H 'Content-Type: application/json; charset=utf-8' \
+  -d '{"query":"把三段会议纪要提炼成要点列表"}'
+```
+
+### 与 OpenClaw 的关联方式（概念）
+
+本机已安装 OpenClaw 时，可在 **`~/.openclaw/workspace/skills/`** 下使用已放好的 **AgentSkills** 目录（与官方 [Skills](https://docs.openclaw.ai/tools/skills) 一致）：
+
+- `uai-langchain4j-finance` — `SKILL.md` + `post-to-gateway.sh`（`POST …/finance`）
+- `uai-langchain4j-analysis` — `SKILL.md` + `post-to-gateway.sh`（`POST …/analysis`）
+
+Agent 通过 **exec** 执行上述脚本（内部用 `jq` 拼 JSON + `curl` POST），无需改 `web_fetch`（其仅为 GET）。改完技能后执行 **`openclaw gateway restart`** 或新开会话；可用 **`openclaw skills list`** 确认已加载。
+
+若不走 Skill 文件、改为在 OpenClaw 里为两个 Skill 各配置一次 **HTTP 工具 / Webhook**，核心是：
+
+- **财务 Skill**：`POST` → `http://127.0.0.1:19090/api/openclaw/finance`，body 模板 `{"query":"<用户问题或拼接后的上下文>"}`  
+- **分析 Skill**：`POST` → `http://127.0.0.1:19090/api/openclaw/analysis`，同上  
+
+OpenClaw 只负责「大类」选型；**类内路由**在本仓库的 LangChain4j 代码中完成。
+
+### 自动化测试
+
+需要 **JDK 17+**（与父工程一致），且在仓库根目录执行：
+
+```bash
+cd uai-example
+mvn -q test -Dtest=OpenclawSkillGatewayServerTest
+```
+
+用例在 **不调用 LLM**（`startGateway(..., false)`）下验证 HTTP 契约与子意图关键词路由。
+
 ## 与 `com.uni.uai.example` 的关系
 
+- OpenClaw 侧「文件系统 Skill + `AiServices.toolProvider`」的写法见 **`uai-mcp-base`**：`src/main/java/com/uni/uai/mcp/skill/example/`（本 Demo 3 将其中「少入口、多逻辑在 Java」的思想换成 **两个 HTTP 入口**）。
 - Agentic API 用法可参考 `src/main/java/com/uni/uai/example/agent/TestAgentMonitor.java`（监控与 HTML 报告）。
 - **可选 Agent** 可参考 `src/main/java/com/uni/uai/example/agent/TestOptional.java`（`optional(true)` 与缺参跳过）。
 - Non-AI Agent 可参考 `src/main/java/com/uni/uai/example/nonagent/ExchangeOperator.java`（类 + `@Agent` + `outputKey`）。

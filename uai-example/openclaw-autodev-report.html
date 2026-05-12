@@ -308,14 +308,14 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 </div>
 </li>
 <li>
-<div class="node-card node-border-nonai" data-agent-id="generateStoreHtml$2" data-output-key="code" data-output-color="#f4a261" data-input-keys="request">
+<div class="node-card node-border-nonai" data-agent-id="generateStoreHtml$2" data-output-key="code" data-output-color="#f4a261" data-input-keys="@AgenticScope,request">
 <div class="node-card-header"><span class="topology-badge nonai">Action</span><span class="agent-name">generateStoreHtml</span></div>
 <div class="node-details">
 <div class="node-detail"><span class="nd-label">Type</span> <span class="nd-value">OpenclawStoreHtmlGenerator</span></div>
 <div class="node-detail"><span class="nd-label">Desc</span> <span class="nd-value">Openclaw Skill 商店页面生成（mock，不调用大模型）</span></div>
 <div class="node-detail"><span class="nd-label">Returns</span> <span class="nd-value">String</span></div>
 </div>
-<div class="key-flow"><span class="key-pill key-in" style="--kc:#e9c46a">&#8592; request</span><span class="key-pill key-out" style="--kc:#f4a261">&#8594; code</span></div>
+<div class="key-flow"><span class="key-pill key-in" style="--kc:#7b2d8e">&#8592; @AgenticScope</span><span class="key-pill key-in" style="--kc:#e9c46a">&#8592; request</span><span class="key-pill key-out" style="--kc:#f4a261">&#8594; code</span></div>
 </div>
 </li>
 <li>
@@ -336,12 +336,34 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 <div class="node-detail"><span class="nd-label">Type</span> <span class="nd-value">UntypedAgent</span></div>
 <div class="node-detail"><span class="nd-label">Returns</span> <span class="nd-value">Object</span></div>
 <div class="node-detail"><span class="nd-label">Planner</span> <span class="nd-value">LoopPlanner</span></div>
-<div class="loop-info"><span class="loop-tag">max 100</span><span class="loop-tag">exit: &lt;unknown&gt;</span><span class="loop-tag">test at start</span></div>
+<div class="loop-info"><span class="loop-tag">max 100</span><span class="loop-tag">exit: &lt;unknown&gt;</span><span class="loop-tag">test at end</span></div>
 </div>
 </div>
 <ul>
 <li>
-<div class="node-card node-border-nonai" data-agent-id="writeHtmlToDisk$0$4" data-output-key="file" data-output-color="#d62828" data-input-keys="allow,code,targetDir">
+<div class="node-card node-border-nonai" data-agent-id="mockBrowserLoad$0$4" data-output-key="check" data-output-color="#e63946" data-input-keys="@AgenticScope">
+<div class="node-card-header"><span class="topology-badge nonai">Action</span><span class="agent-name">mockBrowserLoad</span></div>
+<div class="node-details">
+<div class="node-detail"><span class="nd-label">Type</span> <span class="nd-value">OpenclawBrowserMockAgent</span></div>
+<div class="node-detail"><span class="nd-label">Desc</span> <span class="nd-value">Mock 浏览器：按 maxLoopIterations 动态校验并返回结果</span></div>
+<div class="node-detail"><span class="nd-label">Returns</span> <span class="nd-value">String</span></div>
+</div>
+<div class="key-flow"><span class="key-pill key-in" style="--kc:#7b2d8e">&#8592; @AgenticScope</span><span class="key-pill key-out" style="--kc:#e63946">&#8594; check</span></div>
+</div>
+</li>
+<li>
+<div class="node-card node-border-nonai" data-agent-id="adjustCode$1$4" data-output-key="code" data-output-color="#f4a261" data-input-keys="@AgenticScope">
+<div class="node-card-header"><span class="topology-badge nonai">Action</span><span class="agent-name">adjustCode</span></div>
+<div class="node-details">
+<div class="node-detail"><span class="nd-label">Type</span> <span class="nd-value">OpenclawCodeAdjuster</span></div>
+<div class="node-detail"><span class="nd-label">Desc</span> <span class="nd-value">根据浏览器检查结果调整 HTML 代码</span></div>
+<div class="node-detail"><span class="nd-label">Returns</span> <span class="nd-value">String</span></div>
+</div>
+<div class="key-flow"><span class="key-pill key-in" style="--kc:#7b2d8e">&#8592; @AgenticScope</span><span class="key-pill key-out" style="--kc:#f4a261">&#8594; code</span></div>
+</div>
+</li>
+<li>
+<div class="node-card node-border-nonai" data-agent-id="writeHtmlToDisk$2$4" data-output-key="file" data-output-color="#d62828" data-input-keys="allow,code,targetDir">
 <div class="node-card-header"><span class="topology-badge nonai">Action</span><span class="agent-name">writeHtmlToDisk</span></div>
 <div class="node-details">
 <div class="node-detail"><span class="nd-label">Type</span> <span class="nd-value">OpenclawStoreFileWriter</span></div>
@@ -349,17 +371,6 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 <div class="node-detail"><span class="nd-label">Returns</span> <span class="nd-value">String</span></div>
 </div>
 <div class="key-flow"><span class="key-pill key-in" style="--kc:#264653">&#8592; allow</span><span class="key-pill key-in" style="--kc:#f4a261">&#8592; code</span><span class="key-pill key-in" style="--kc:#6a994e">&#8592; targetDir</span><span class="key-pill key-out" style="--kc:#d62828">&#8594; file</span></div>
-</div>
-</li>
-<li>
-<div class="node-card node-border-nonai" data-agent-id="mockBrowserLoad$1$4" data-output-key="check" data-output-color="#e63946" data-input-keys="@AgenticScope,allow,file">
-<div class="node-card-header"><span class="topology-badge nonai">Action</span><span class="agent-name">mockBrowserLoad</span></div>
-<div class="node-details">
-<div class="node-detail"><span class="nd-label">Type</span> <span class="nd-value">OpenclawBrowserMockAgent</span></div>
-<div class="node-detail"><span class="nd-label">Desc</span> <span class="nd-value">Mock 浏览器：按 maxLoopIterations 动态校验并返回结果</span></div>
-<div class="node-detail"><span class="nd-label">Returns</span> <span class="nd-value">String</span></div>
-</div>
-<div class="key-flow"><span class="key-pill key-in" style="--kc:#7b2d8e">&#8592; @AgenticScope</span><span class="key-pill key-in" style="--kc:#264653">&#8592; allow</span><span class="key-pill key-in" style="--kc:#d62828">&#8592; file</span><span class="key-pill key-out" style="--kc:#e63946">&#8594; check</span></div>
 </div>
 </li>
 </ul>
@@ -377,67 +388,348 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 </div>
 <div class="execution-group">
 <div class="execution-header" onclick="toggle('g0')">
-  <span class="chevron">&#9660;</span>  <span class="execution-memory-id">Session: 6e81e7e3-f4ee-4c2b-bcd6-53a7bc01a59f</span>  <div class="execution-meta">    <span class="section-count">1 run(s)</span><span class="status-badge st-ok">1 success</span>  </div>
+  <span class="chevron">&#9660;</span>  <span class="execution-memory-id">Session: 46751e7c-e023-465e-a246-3a8ff630039e</span>  <div class="execution-meta">    <span class="section-count">1 run(s)</span><span class="status-badge st-ok">1 success</span>  </div>
 </div>
 <div id="g0" class="execution-body">
 <div class="single-exec">
-<div class="exec-summary"><span class="status-dot st-dot-ok"></span><span class="exec-agent">openclawAutonomousDevPipeline</span><span class="dur-badge">52.3s</span><span class="exec-time">17:43:30.407 &#8594; 17:44:22.674</span></div>
+<div class="exec-summary"><span class="status-dot st-dot-ok"></span><span class="exec-agent">openclawAutonomousDevPipeline</span><span class="dur-badge">11.4s</span><span class="exec-time">20:37:54.005 &#8594; 20:38:05.395</span></div>
 <table class="wf-table">
 <thead><tr><th>Agent</th><th>Duration</th><th>Tokens</th><th class="wf-timeline-col">Timeline</th><th>Input</th><th>Output</th></tr></thead>
 <tbody>
-<tr><td><div class="wf-agent"><span class="topology-badge sm seq">Sequence</span> openclawAutonomousDevPipeline</div></td><td class="wf-dur">52.3s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-seq" style="left:0.0%;width:100.0%;" title="openclawAutonomousDevPipeline: 52.3s"></div></div></td><td class="wf-io"><span class="tt-trigger">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，...<span class="tt-content">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮, maxLoopIterations=10, rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></span></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 5, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm ai">AI</span> openclawRequestAnalyst</div></td><td class="wf-dur">2.1s</td><td class="wf-dur">190</td><td><div class="wf-bar-track"><div class="wf-bar bar-ai" style="left:0.0%;width:4.1%;" title="openclawRequestAnalyst: 2.1s"></div></div></td><td class="wf-io"><span class="tt-trigger">{rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></td><td class="wf-io"><span class="tt-trigger">{
-  &quot;pageTitle&quot;: &quot;Openclaw Skill 极客风格首页&quot;,
+<tr><td><div class="wf-agent"><span class="topology-badge sm seq">Sequence</span> openclawAutonomousDevPipeline</div></td><td class="wf-dur">11.4s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-seq" style="left:0.0%;width:100.0%;" title="openclawAutonomousDevPipeline: 11.4s"></div></div></td><td class="wf-io"><span class="tt-trigger">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，...<span class="tt-content">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮, maxLoopIterations=10, rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></span></td><td class="wf-io"><span class="tt-trigger">success</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm ai">AI</span> openclawRequestAnalyst</div></td><td class="wf-dur">2.8s</td><td class="wf-dur">188</td><td><div class="wf-bar-track"><div class="wf-bar bar-ai" style="left:0.0%;width:24.7%;" title="openclawRequestAnalyst: 2.8s"></div></div></td><td class="wf-io"><span class="tt-trigger">{rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></td><td class="wf-io"><span class="tt-trigger">{
+  &quot;pageTitle&quot;: &quot;极客风格线上商店&quot;,
   &quot;maxLoopIterations&quot;: 6
 }</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm loop">Loop</span> openclawWriteVerifyLoop</div></td><td class="wf-dur">5.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-loop" style="left:90.3%;width:9.7%;" title="openclawWriteVerifyLoop: 5.0s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, request=Openclaw Skill 极客风格首页, analysisJson={
-  &quot;pageTitle&quot;: &quot;Opencl...<span class="tt-content">{allow=yes, request=Openclaw Skill 极客风格首页, analysisJson={
-  &quot;pageTitle&quot;: &quot;Openclaw Skill 极客风格首页&quot;,
-  &quot;maxLoopIteratio..., code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm loop">Loop</span> openclawWriteVerifyLoop</div></td><td class="wf-dur">6.2s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-loop" style="left:46.0%;width:54.0%;" title="openclawWriteVerifyLoop: 6.2s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, request=极客风格线上商店, analysisJson={
+  &quot;pageTitle&quot;: &quot;极客风格线上商店&quot;,
+  &quot;maxLo...<span class="tt-content">{allow=yes, request=极客风格线上商店, analysisJson={
+  &quot;pageTitle&quot;: &quot;极客风格线上商店&quot;,
+  &quot;maxLoopIterations&quot;: 6
+}, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
-  &lt;meta charset=&quot;..., maxLoopIterations=6, rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮, check=error: mock browser warmup failed (attempt 5, need 6 for suc..., file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">3ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:90.3%;width:0.4%;" title="writeHtmlToDisk: 3ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+  &lt;meta charset=&quot;..., maxLoopIterations=6, rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮, check=success, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:46.0%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 1, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">63ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:54.8%;width:0.6%;" title="adjustCode: 63ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta nam...<span class="tt-content">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
+  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;style&gt;
+    :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+    header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #2a3544; display: flex; align-items: center; justify-content: space-between; }
+    h1 { font-size: 1.15rem; margin: 0; }
+    .badge { background: #243044; color: #8ab4ff; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.75rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    article { background: var(--card); border-radius: 10px; padding: 1rem; border: 1px solid #2a3544; }
+    article h2 { font-size: 0.95rem; margin: 0 0 0.35rem; color: var(--accent); }
+    p { margin: 0; font-size: 0.85rem; opacity: 0.9; line-height: 1.45; }
+    .price { margin-top: 0.6rem; font-weight: 600; color: #7ee787; }
+    footer { text-align: center; padding: 2rem; font-size: 0.8rem; opacity: 0.65; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;p style=&quot;margin-bottom:1rem;font-size:0.9rem;&quot;&gt;本页由 AI 自主开发系统 Demo（Non-AI Agent 流水线）mock 生成，用于岗位能力评估展示。&lt;/p&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Git&lt;/h2&gt;&lt;p&gt;仓库与 PR 自动化 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;免费&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Docs&lt;/h2&gt;&lt;p&gt;文档索引与站内搜索 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥9/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Notify&lt;/h2&gt;&lt;p&gt;多渠道告警与值班 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥19/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Deploy&lt;/h2&gt;&lt;p&gt;一键预览环境 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥29/月&lt;/div&gt;&lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;Generated by com.uni.uai.demo.agent · OpenclawStoreHtmlGenerator&lt;/footer&gt;
+  &lt;!-- auto-adjust attempt 1: error: mock browser warmup failed (attempt 1, need 6 for success) --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</span></span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">35ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:55.4%;width:0.4%;" title="writeHtmlToDisk: 35ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:90.3%;width:1.9%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op......<span class="tt-content">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op...}</span></span></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 1, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:92.3%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:55.7%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 2, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:64.5%;width:0.4%;" title="adjustCode: 1ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta nam...<span class="tt-content">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
+  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;style&gt;
+    :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+    header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #2a3544; display: flex; align-items: center; justify-content: space-between; }
+    h1 { font-size: 1.15rem; margin: 0; }
+    .badge { background: #243044; color: #8ab4ff; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.75rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    article { background: var(--card); border-radius: 10px; padding: 1rem; border: 1px solid #2a3544; }
+    article h2 { font-size: 0.95rem; margin: 0 0 0.35rem; color: var(--accent); }
+    p { margin: 0; font-size: 0.85rem; opacity: 0.9; line-height: 1.45; }
+    .price { margin-top: 0.6rem; font-weight: 600; color: #7ee787; }
+    footer { text-align: center; padding: 2rem; font-size: 0.8rem; opacity: 0.65; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;p style=&quot;margin-bottom:1rem;font-size:0.9rem;&quot;&gt;本页由 AI 自主开发系统 Demo（Non-AI Agent 流水线）mock 生成，用于岗位能力评估展示。&lt;/p&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Git&lt;/h2&gt;&lt;p&gt;仓库与 PR 自动化 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;免费&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Docs&lt;/h2&gt;&lt;p&gt;文档索引与站内搜索 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥9/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Notify&lt;/h2&gt;&lt;p&gt;多渠道告警与值班 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥19/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Deploy&lt;/h2&gt;&lt;p&gt;一键预览环境 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥29/月&lt;/div&gt;&lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;Generated by com.uni.uai.demo.agent · OpenclawStoreHtmlGenerator&lt;/footer&gt;
+  &lt;!-- auto-adjust attempt 1: error: mock browser warmup failed (attempt 1, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 2: error: mock browser warmup failed (attempt 2, need 6 for success) --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</span></span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">2ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:64.5%;width:0.4%;" title="writeHtmlToDisk: 2ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:92.3%;width:1.9%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op......<span class="tt-content">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op...}</span></span></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 2, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:94.2%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:64.5%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 3, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:73.4%;width:0.4%;" title="adjustCode: 1ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta nam...<span class="tt-content">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
+  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;style&gt;
+    :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+    header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #2a3544; display: flex; align-items: center; justify-content: space-between; }
+    h1 { font-size: 1.15rem; margin: 0; }
+    .badge { background: #243044; color: #8ab4ff; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.75rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    article { background: var(--card); border-radius: 10px; padding: 1rem; border: 1px solid #2a3544; }
+    article h2 { font-size: 0.95rem; margin: 0 0 0.35rem; color: var(--accent); }
+    p { margin: 0; font-size: 0.85rem; opacity: 0.9; line-height: 1.45; }
+    .price { margin-top: 0.6rem; font-weight: 600; color: #7ee787; }
+    footer { text-align: center; padding: 2rem; font-size: 0.8rem; opacity: 0.65; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;p style=&quot;margin-bottom:1rem;font-size:0.9rem;&quot;&gt;本页由 AI 自主开发系统 Demo（Non-AI Agent 流水线）mock 生成，用于岗位能力评估展示。&lt;/p&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Git&lt;/h2&gt;&lt;p&gt;仓库与 PR 自动化 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;免费&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Docs&lt;/h2&gt;&lt;p&gt;文档索引与站内搜索 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥9/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Notify&lt;/h2&gt;&lt;p&gt;多渠道告警与值班 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥19/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Deploy&lt;/h2&gt;&lt;p&gt;一键预览环境 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥29/月&lt;/div&gt;&lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;Generated by com.uni.uai.demo.agent · OpenclawStoreHtmlGenerator&lt;/footer&gt;
+  &lt;!-- auto-adjust attempt 1: error: mock browser warmup failed (attempt 1, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 2: error: mock browser warmup failed (attempt 2, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 3: error: mock browser warmup failed (attempt 3, need 6 for success) --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</span></span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:73.4%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:94.2%;width:1.9%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op......<span class="tt-content">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op...}</span></span></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 3, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:96.1%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:73.4%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 4, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:82.2%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta nam...<span class="tt-content">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
+  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;style&gt;
+    :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+    header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #2a3544; display: flex; align-items: center; justify-content: space-between; }
+    h1 { font-size: 1.15rem; margin: 0; }
+    .badge { background: #243044; color: #8ab4ff; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.75rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    article { background: var(--card); border-radius: 10px; padding: 1rem; border: 1px solid #2a3544; }
+    article h2 { font-size: 0.95rem; margin: 0 0 0.35rem; color: var(--accent); }
+    p { margin: 0; font-size: 0.85rem; opacity: 0.9; line-height: 1.45; }
+    .price { margin-top: 0.6rem; font-weight: 600; color: #7ee787; }
+    footer { text-align: center; padding: 2rem; font-size: 0.8rem; opacity: 0.65; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;p style=&quot;margin-bottom:1rem;font-size:0.9rem;&quot;&gt;本页由 AI 自主开发系统 Demo（Non-AI Agent 流水线）mock 生成，用于岗位能力评估展示。&lt;/p&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Git&lt;/h2&gt;&lt;p&gt;仓库与 PR 自动化 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;免费&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Docs&lt;/h2&gt;&lt;p&gt;文档索引与站内搜索 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥9/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Notify&lt;/h2&gt;&lt;p&gt;多渠道告警与值班 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥19/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Deploy&lt;/h2&gt;&lt;p&gt;一键预览环境 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥29/月&lt;/div&gt;&lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;Generated by com.uni.uai.demo.agent · OpenclawStoreHtmlGenerator&lt;/footer&gt;
+  &lt;!-- auto-adjust attempt 1: error: mock browser warmup failed (attempt 1, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 2: error: mock browser warmup failed (attempt 2, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 3: error: mock browser warmup failed (attempt 3, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 4: error: mock browser warmup failed (attempt 4, need 6 for success) --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</span></span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:82.2%;width:0.4%;" title="writeHtmlToDisk: 0ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:96.1%;width:1.9%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op......<span class="tt-content">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op...}</span></span></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 4, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">2ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:98.1%;width:0.4%;" title="writeHtmlToDisk: 2ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:82.2%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 5, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:91.1%;width:0.4%;" title="adjustCode: 1ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta nam...<span class="tt-content">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
+  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;style&gt;
+    :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+    header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #2a3544; display: flex; align-items: center; justify-content: space-between; }
+    h1 { font-size: 1.15rem; margin: 0; }
+    .badge { background: #243044; color: #8ab4ff; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.75rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    article { background: var(--card); border-radius: 10px; padding: 1rem; border: 1px solid #2a3544; }
+    article h2 { font-size: 0.95rem; margin: 0 0 0.35rem; color: var(--accent); }
+    p { margin: 0; font-size: 0.85rem; opacity: 0.9; line-height: 1.45; }
+    .price { margin-top: 0.6rem; font-weight: 600; color: #7ee787; }
+    footer { text-align: center; padding: 2rem; font-size: 0.8rem; opacity: 0.65; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;p style=&quot;margin-bottom:1rem;font-size:0.9rem;&quot;&gt;本页由 AI 自主开发系统 Demo（Non-AI Agent 流水线）mock 生成，用于岗位能力评估展示。&lt;/p&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Git&lt;/h2&gt;&lt;p&gt;仓库与 PR 自动化 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;免费&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Docs&lt;/h2&gt;&lt;p&gt;文档索引与站内搜索 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥9/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Notify&lt;/h2&gt;&lt;p&gt;多渠道告警与值班 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥19/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Deploy&lt;/h2&gt;&lt;p&gt;一键预览环境 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥29/月&lt;/div&gt;&lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;Generated by com.uni.uai.demo.agent · OpenclawStoreHtmlGenerator&lt;/footer&gt;
+  &lt;!-- auto-adjust attempt 1: error: mock browser warmup failed (attempt 1, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 2: error: mock browser warmup failed (attempt 2, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 3: error: mock browser warmup failed (attempt 3, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 4: error: mock browser warmup failed (attempt 4, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 5: error: mock browser warmup failed (attempt 5, need 6 for success) --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</span></span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">2ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:91.1%;width:0.4%;" title="writeHtmlToDisk: 2ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:98.1%;width:1.9%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op......<span class="tt-content">{allow=yes, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op...}</span></span></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 5, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 5</span></div></td><td class="wf-dur">2ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:100.0%;width:0.4%;" title="writeHtmlToDisk: 2ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 5</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:91.1%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">success</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 5</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:100.0%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta nam...<span class="tt-content">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;/&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
+  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;style&gt;
+    :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+    header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #2a3544; display: flex; align-items: center; justify-content: space-between; }
+    h1 { font-size: 1.15rem; margin: 0; }
+    .badge { background: #243044; color: #8ab4ff; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.75rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    article { background: var(--card); border-radius: 10px; padding: 1rem; border: 1px solid #2a3544; }
+    article h2 { font-size: 0.95rem; margin: 0 0 0.35rem; color: var(--accent); }
+    p { margin: 0; font-size: 0.85rem; opacity: 0.9; line-height: 1.45; }
+    .price { margin-top: 0.6rem; font-weight: 600; color: #7ee787; }
+    footer { text-align: center; padding: 2rem; font-size: 0.8rem; opacity: 0.65; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;p style=&quot;margin-bottom:1rem;font-size:0.9rem;&quot;&gt;本页由 AI 自主开发系统 Demo（Non-AI Agent 流水线）mock 生成，用于岗位能力评估展示。&lt;/p&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Git&lt;/h2&gt;&lt;p&gt;仓库与 PR 自动化 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;免费&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Docs&lt;/h2&gt;&lt;p&gt;文档索引与站内搜索 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥9/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Notify&lt;/h2&gt;&lt;p&gt;多渠道告警与值班 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥19/月&lt;/div&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;h2&gt;Claw Deploy&lt;/h2&gt;&lt;p&gt;一键预览环境 Skill。&lt;/p&gt;&lt;div class=&quot;price&quot;&gt;¥29/月&lt;/div&gt;&lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;Generated by com.uni.uai.demo.agent · OpenclawStoreHtmlGenerator&lt;/footer&gt;
+  &lt;!-- auto-adjust attempt 1: error: mock browser warmup failed (attempt 1, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 2: error: mock browser warmup failed (attempt 2, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 3: error: mock browser warmup failed (attempt 3, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 4: error: mock browser warmup failed (attempt 4, need 6 for success) --&gt;
+  &lt;!-- auto-adjust attempt 5: error: mock browser warmup failed (attempt 5, need 6 for success) --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</span></span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 5</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:100.0%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
@@ -449,7 +741,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 </div>
 </div>
 </section>
-<footer class="footer">Generated by LangChain4j at 2026-05-06 17:44:22</footer>
+<footer class="footer">Generated by LangChain4j at 2026-05-06 20:38:05</footer>
 </main>
 <script>
 function toggle(id) {

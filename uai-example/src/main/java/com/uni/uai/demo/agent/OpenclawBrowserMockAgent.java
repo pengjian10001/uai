@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.agentic.scope.AgenticScope;
-import dev.langchain4j.service.V;
 
 /**
  * 非 AI Agent：mock「浏览器加载」——读取已写入的 HTML 文件；
@@ -30,23 +29,28 @@ public class OpenclawBrowserMockAgent {
             value = "Mock 浏览器：按 maxLoopIterations 动态校验并返回结果",
             outputKey = "check"
     )
-    public String mockBrowserLoad(AgenticScope scope, @V("allow") String allow, @V("file") String filePath) {
+    public String mockBrowserLoad(AgenticScope scope) {
+        String allow = String.valueOf(scope.readState("allow", ""));
+        String filePath = String.valueOf(scope.readState("file", ""));
         System.out.println("[OpenclawBrowserMockAgent] 开始 mock 浏览器校验，allow=" + allow + ", file=" + filePath);
         if (!isYes(allow)) {
             System.out.println("[OpenclawBrowserMockAgent] 用户未同意写入，设置 check=user_declined 并结束");
             return "user_declined";
         }
-        if (filePath == null || filePath.isBlank()) {
-            System.out.println("[OpenclawBrowserMockAgent] 无有效文件路径，返回错误");
-            return "error: file path empty";
-        }
         int n = BROWSER_INVOCATIONS.incrementAndGet();
         int successAt = readSuccessAttempt(scope);
-        System.out.println("[OpenclawBrowserMockAgent] 第 " + n + " 次 mock 调用（读取文件校验）");
+        System.out.println("[OpenclawBrowserMockAgent] 第 " + n + " 次 mock 调用（优先校验 key=code，无则回退读 file）");
         try {
             System.out.println("[OpenclawBrowserMockAgent] 模拟执行过程 sleep 1000ms");
             Thread.sleep(1000L);
-            String content = Files.readString(Path.of(filePath), StandardCharsets.UTF_8);
+            String content = String.valueOf(scope.readState("code", ""));
+            if (content.isBlank()) {
+                if (filePath == null || filePath.isBlank()) {
+                    System.out.println("[OpenclawBrowserMockAgent] key=code 与 key=file 均不可用，返回错误");
+                    return "error: code and file path empty";
+                }
+                content = Files.readString(Path.of(filePath), StandardCharsets.UTF_8);
+            }
             int len = content.length();
             System.out.println("[OpenclawBrowserMockAgent] 已读取文件，长度=" + len);
             if (n < successAt) {

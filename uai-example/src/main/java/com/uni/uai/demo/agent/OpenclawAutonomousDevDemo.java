@@ -56,7 +56,11 @@ public class OpenclawAutonomousDevDemo {
         UntypedAgent writeAndVerifyLoop = AgenticServices.loopBuilder()
                 .name("openclawWriteVerifyLoop")
                 .listener(consoleSteps())
-                .subAgents(new OpenclawStoreFileWriter(), new OpenclawBrowserMockAgent())
+                .testExitAtLoopEnd(true)
+                .subAgents(
+                        new OpenclawBrowserMockAgent(),
+                        new OpenclawCodeAdjuster(),
+                        new OpenclawStoreFileWriter())
                 .maxIterations(100)
                 .exitCondition((scope, loopCounter) -> {
                     String c = scope.readState("check", "");
