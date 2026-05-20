@@ -79,7 +79,7 @@ public abstract class SseBaseServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 1. 配置 SSE 核心响应头（严格遵循协议规范）
-        response.setContentType("text/event-stream"); // 标识为 SSE 流
+        response.setContentType("text/event-stream;charset=UTF-8"); // 标识为 SSE 流，显式指定 UTF-8
         response.setCharacterEncoding("UTF-8");       // 强制 UTF-8 编码
         response.setHeader("Cache-Control", "no-cache"); // 禁止缓存
         response.setHeader("Connection", "keep-alive"); // 维持长连接

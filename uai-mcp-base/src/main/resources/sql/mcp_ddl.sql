@@ -7,7 +7,7 @@ CREATE TABLE `t_chat_message` (
   `session_id` varchar(100) NOT NULL DEFAULT '' COMMENT '会话id，一个会话id对应多条single_id',
   `single_id` varchar(100) NOT NULL DEFAULT '' COMMENT '单次对话id，例如，值可以为应用中一次请求的logId',
   `type` varchar(100) NOT NULL DEFAULT '' COMMENT '消息的类型，取值为ChatMessage的子类，包括SystemMessage、UserMessage、AiMessage、ToolExecutionResultMessage、CustomMessage等',
-  `content` mediumtext COMMENT '消息的内容',
+  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '消息的内容',
   `state` int(11) NOT NULL DEFAULT '0' COMMENT '是否有效，0为有效，1为无效，默认为0',
   `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),

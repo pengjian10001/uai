@@ -8,12 +8,18 @@ spring:
   # ubag的依赖，不能去掉
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mcp?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/mcp?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: abc123456
 
 mysql:
   datasource:
-    url: localhost:3306?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: localhost:3306?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: abc123456
+
+uai:
+  llm:
+    base-url: https://api.deepseek.com
+    model-name: deepseek-chat
+    # api-key 请通过环境变量 UAI_LLM_API_KEY 或 JVM 参数 -Duai.llm.api-key 配置

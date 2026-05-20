@@ -1,5 +1,4 @@
 <factorypath>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/uni/uai/uai-rag/1.0-SNAPSHOT/uai-rag-1.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/dev/langchain4j/langchain4j-embeddings/1.8.0-beta15/langchain4j-embeddings-1.8.0-beta15.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/microsoft/onnxruntime/onnxruntime/1.20.0/onnxruntime-1.20.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/ai/djl/api/0.31.1/api-0.31.1.jar" enabled="true" runInBatchMode="false"/>

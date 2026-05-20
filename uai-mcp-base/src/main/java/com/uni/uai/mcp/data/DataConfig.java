@@ -67,7 +67,7 @@ public class DataConfig {
 						if(url.indexOf("?")>0) {
 		                	url = url.substring(0, url.indexOf("?")) + "/mcp" + url.substring(url.indexOf("?"), url.length()) ;
 		                }else {
-		                	url += "/mcp?allowMultiQueries=true&autoReconnect=true&failOverReadOnly=false";
+		                	url += "/mcp?allowMultiQueries=true&autoReconnect=true&failOverReadOnly=false&useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci";
 		                }
 						dataSource.setJdbcUrl(url);
 						dataSource.setUser(YmlConfigUtil.getInstance().getYmlConfigValue("mysql.datasource.username"));

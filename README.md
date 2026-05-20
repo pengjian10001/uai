@@ -9,6 +9,114 @@ UAI 是一个面向 Agent/LLM 的服务集合，包含 MCP 工具管理、会话
 - `uai-web-boot`：Spring Boot Web 容器能力（含 WebSocket/SSE 集成）。
 - 其他模块（`uai-common`、`uai-util`、`uai-rag`、`uai-vec`、`uai-graph`）提供公共能力与扩展支撑。
 
+## 快速开始
+
+### 1. 初始化数据库
+
+```bash
+mysql -u root -p < uai-mcp-base/src/main/resources/sql/mcp_ddl.sql
+```
+
+若库已存在且写入 emoji 报错，再执行 `uai-mcp-base/src/main/resources/sql/mcp_utf8mb4_fix.sql`。
+
+### 2. 配置 LLM
+
+阻塞调用与 SSE 流式输出**共用同一套 LLM 配置**（见 `ChatModelFactory`），请确保两者指向同一 provider，避免流式阶段中文乱码。
+
+#### 配置项说明
+
+| 环境变量 | JVM / YAML 属性 | 说明 | 默认值 |
+|---------|----------------|------|--------|
+| `UAI_LLM_API_KEY` | `uai.llm.api-key` | API Key（必填，demo 除外） | 无 |
+| `UAI_LLM_BASE_URL` | `uai.llm.base-url` | OpenAI 兼容接口地址 | `https://api.deepseek.com` |
+| `UAI_LLM_MODEL_NAME` | `uai.llm.model-name` | 模型名称 | `deepseek-chat` |
+
+#### 配置优先级（高 → 低）
+
+1. **OS 环境变量**（`export UAI_LLM_API_KEY=...`）
+2. **JVM 参数**（`-Duai.llm.api-key=...`）
+3. **`.env` 文件**（项目根目录，启动时由 `EnvFileLoader` 自动加载为 System Property；**不覆盖** 1、2 中已存在的值）
+4. **`application-{profile}.yml`** 中的 `uai.llm.*`
+5. **代码默认值**
+
+> 注意：Java 进程**不会**像 Node.js 那样自动读取 `.env`。本项目在 `ChatModelFactory` 初始化前调用 `EnvFileLoader.loadIfPresent()`，将 `.env` 中的 `UAI_LLM_*` 映射为 `uai.llm.*` 系统属性，供后续配置解析使用。
+
+#### 方式 A：使用 `.env`（本地开发推荐）
+
+```bash
+cp .env.example .env
+# 编辑 .env，变量名必须为 UAI_LLM_API_KEY，不能写成 api-key
+```
+
+`.env` 格式：
+
+```bash
+UAI_LLM_API_KEY=sk-your-real-api-key
+UAI_LLM_BASE_URL=https://api.deepseek.com
+UAI_LLM_MODEL_NAME=deepseek-chat
+```
+
+启动成功后，日志中应出现：
+
+```
+Loaded env file: /path/to/uai/.env
+```
+
+`.env` 会从当前工作目录向上最多查找 6 层父目录，一般放在**项目根目录**即可。
+
+#### 方式 B：export 环境变量
+
+```bash
+export UAI_LLM_API_KEY="your_api_key"
+export UAI_LLM_BASE_URL="https://api.deepseek.com"
+export UAI_LLM_MODEL_NAME="deepseek-chat"
+```
+
+#### 方式 C：YAML 配置
+
+在 `uai-mcp-server/src/main/resources/application-local.yml`（本地私有，勿提交密钥）中配置：
+
+```yaml
+uai:
+  llm:
+    base-url: https://api.deepseek.com
+    model-name: deepseek-chat
+    api-key: your_api_key
+```
+
+使用 `langchain4j.dev` demo 时，`UAI_LLM_API_KEY` 可省略，api-key 自动为 `demo`。
+
+### 3. 配置数据库连接
+
+编辑对应 profile 的配置文件（如 `uai-mcp-server/src/main/resources/application-local.yml`），修改 `spring.datasource` 与 `mysql.datasource` 的地址、用户名、密码。
+
+### 4. 启动服务
+
+```bash
+mvn clean install jetty:run -Dspring.profiles.active=local
+```
+
+配置读取依赖 `spring.profiles.active`，请确保对应 profile 的数据源与 LLM 配置正确。
+
+### 5. 验证对话
+
+浏览器打开流式对话页：
+
+```
+http://localhost:8080/static/mcp/chat/stream/ssebox
+```
+
+或使用 curl 调用 SSE 接口：
+
+```bash
+curl 'http://localhost:8080/commonsse/api/query_ai' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/json' \
+  --data '{"sessionId":"test-session-001","clientName":"test-client","ucid":"0","message":"你有什么工具，表格展示"}'
+```
+
+建议请求中显式传递 `sessionId` 与 `ucid`，便于多轮记忆与日志追踪。
+
 ## MCP 核心设计
 
 MCP 通过「工具 + 标签 + 标签工具关系」实现 Agent 角色化编排：
@@ -35,6 +143,30 @@ MCP 通过「工具 + 标签 + 标签工具关系」实现 Agent 角色化编排
 - `t_label`、`t_label_tool`：角色标签及工具绑定。
 
 建议先执行 DDL，再导入初始工具与标签数据。
+
+```bash
+mysql -u root -p < uai-mcp-base/src/main/resources/sql/mcp_ddl.sql
+```
+
+### 字符集（utf8mb4）
+
+会话消息可能包含 emoji 等 4 字节 UTF-8 字符，`t_chat_message.content` 必须使用 `utf8mb4`。若遇到如下报错：
+
+```
+Incorrect string value: '\xF0\x9F...' for column 'content'
+```
+
+请执行修复脚本：
+
+```bash
+mysql -u root -p mcp < uai-mcp-base/src/main/resources/sql/mcp_utf8mb4_fix.sql
+```
+
+JDBC 连接也需使用 utf8mb4（项目 `application-*.yml` 已默认配置）：
+
+```
+characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci
+```
 
 ## clientName 路由规则
 
@@ -95,51 +227,45 @@ curl 'http://localhost:8080/commonsse/api/query_ai' \
   --data '{"sessionId":"mhn9kcp3hj9woc4k","clientName":"test-client","ucid":"0","message":"北京天气和交通情况"}'
 ```
 
-## 启动建议
+## 敏感信息配置
 
-本地连接数据库启动（示例）：
+LLM 相关配置由 `ChatModelFactory` 统一创建阻塞模型与流式模型，密钥不在代码中写死。
 
-```bash
-mvn clean install jetty:run -Dspring.profiles.active=local
-```
+实现要点：
 
-说明：配置读取依赖 `spring.profiles.active`，请确保对应 profile 的数据源与依赖配置正确。
+- `EnvFileLoader`：启动时将项目根目录 `.env` 加载为 System Property
+- `ChatModelFactory.resolveConfig()`：按优先级合并环境变量、JVM 参数、YAML 与默认值
+- 阻塞模型（`getDefaultChatModel`）与流式模型（`getDefaultStreamingChatModel`）必须使用相同 `baseUrl` / `modelName` / `apiKey`
 
-## 开源前敏感信息配置
-
-为避免密钥泄露，`uai-mcp-base/src/main/java/com/uni/uai/mcp/llm/ChatModelFactory.java` 已改为从环境变量或 JVM 参数读取 LLM 配置，不再在代码中写死 key。
-
-必填配置（二选一）：
+必填配置（任选一种来源）：
 
 - 环境变量：`UAI_LLM_API_KEY`
 - JVM 参数：`-Duai.llm.api-key=...`
+- `.env` 文件：`UAI_LLM_API_KEY=...`（自动加载）
+- YAML：`uai.llm.api-key`
 
 可选配置（有默认值）：
 
-- `UAI_LLM_BASE_URL` 或 `-Duai.llm.base-url=...`（默认 `https://openapi-ait.ke.com/v1`）
-- `UAI_LLM_MODEL_NAME` 或 `-Duai.llm.model-name=...`（默认 `gpt-5-mini`）
+- `UAI_LLM_BASE_URL` / `uai.llm.base-url`（默认 `https://api.deepseek.com`）
+- `UAI_LLM_MODEL_NAME` / `uai.llm.model-name`（默认 `deepseek-chat`）
 
-启动示例：
+启动示例（`.env` 方式）：
 
 ```bash
-export UAI_LLM_API_KEY="your_api_key"
-export UAI_LLM_BASE_URL="https://openapi-ait.ke.com/v1"
-export UAI_LLM_MODEL_NAME="gpt-5-mini"
+cp .env.example .env   # 编辑填入真实 key
 mvn clean install jetty:run -Dspring.profiles.active=local
 ```
 
-如果未配置 API Key，服务启动时会抛出 `IllegalStateException` 并提示配置项名称。
-
-### 使用 `.env.example` 快速配置
-
-项目根目录已提供 `.env.example`，可直接复制为本地私有配置：
+启动示例（export 方式）：
 
 ```bash
-cp .env.example .env
+export UAI_LLM_API_KEY="your_api_key"
+export UAI_LLM_BASE_URL="https://api.deepseek.com"
+export UAI_LLM_MODEL_NAME="deepseek-chat"
+mvn clean install jetty:run -Dspring.profiles.active=local
 ```
 
-然后把 `.env` 中的 `UAI_LLM_API_KEY` 改成真实值。  
-注意：`.env` 已被 `.gitignore` 忽略，不会被提交到仓库。
+若未配置 API Key，首次调用 LLM 时会在 `ChatModelFactory` 静态初始化阶段抛出 `IllegalStateException`。
 
 ### 提交前防泄露（pre-commit 推荐）
 
@@ -167,3 +293,48 @@ pre-commit run --all-files
 ```
 
 如果扫描命中疑似密钥，先处理后再提交。
+
+## 常见问题
+
+### Missing LLM API key（`.env` 未生效）
+
+**现象**：请求时报错 `Missing LLM API key. Please set environment variable UAI_LLM_API_KEY or JVM property uai.llm.api-key`。
+
+**常见原因**：
+
+1. `.env` 中变量名写错（如写成 `api-key=` 而非 `UAI_LLM_API_KEY=`）
+2. `.env` 放在错误目录（应放在项目根目录，或确保从根目录启动）
+3. 修改 `.env` 后未重新编译启动（`ChatModelFactory` 在类加载时初始化，需重启进程）
+4. `.env` 中的值仍为占位符 `replace_with_your_real_api_key`
+
+**处理**：
+
+1. 对照 `.env.example` 检查变量名与格式
+2. 重启并确认日志出现 `Loaded env file: ...`；若无此行，说明未找到 `.env`
+3. 或改用 `export UAI_LLM_API_KEY=...` / YAML / JVM 参数
+
+### 写入会话历史报错（MySQL 1366）
+
+**现象**：日志出现 `Incorrect string value: '\xF0\x9F...' for column 'content'`。
+
+**原因**：数据库连接或表字符集不支持 emoji 等 4 字节字符。
+
+**处理**：
+
+1. 执行 `uai-mcp-base/src/main/resources/sql/mcp_utf8mb4_fix.sql`
+2. 确认 JDBC URL 含 `connectionCollation=utf8mb4_unicode_ci`
+3. 重启服务
+
+### SSE 流式响应中文乱码
+
+**现象**：第一次 LLM 调用日志正常，但前端或 `onCompleteResponse` 输出为 `????`。
+
+**原因**：阻塞模型与流式模型使用了不同的 LLM provider。例如阻塞走 DeepSeek、流式仍走 `langchain4j.dev` demo（SSE 响应 `charset=iso-8859-1`），会导致中文解析错误。
+
+**处理**：统一 `UAI_LLM_BASE_URL`、`UAI_LLM_MODEL_NAME`、`UAI_LLM_API_KEY`，使阻塞与流式使用同一 provider，然后重启服务。
+
+### LogPushTask 未启动
+
+**现象**：日志反复打印 `LogPushTask未启动，ubag.log.timer.task.push.enable = false`。
+
+**说明**：这是 ubag 日志推送开关未开启的提示，不影响 MCP 对话与 `t_chat_message` 写入。如需开启，在 `ubag-conf.properties` 中设置 `ubag.log.timer.task.push.enable = true`。

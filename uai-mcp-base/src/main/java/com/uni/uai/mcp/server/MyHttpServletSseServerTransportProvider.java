@@ -173,7 +173,7 @@ public class MyHttpServletSseServerTransportProvider extends HttpServlet impleme
 			return;
 		}
 
-		response.setContentType("text/event-stream");
+		response.setContentType("text/event-stream;charset=UTF-8");
 		response.setCharacterEncoding(UTF_8);
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Connection", "keep-alive");
