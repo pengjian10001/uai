@@ -64,9 +64,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/dev/langchain4j/langchain4j-community-tool-browser-use/1.12.2-beta22/langchain4j-community-tool-browser-use-1.12.2-beta22.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/jakarta/servlet/jakarta.servlet-api/5.0.0/jakarta.servlet-api-5.0.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/jakarta/websocket/jakarta.websocket-api/2.0.0/jakarta.websocket-api-2.0.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/uni/ubag/ubag-data-trad/2.0-SNAPSHOT/ubag-data-trad-2.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/uni/ubag/ubag-data-base/2.0-SNAPSHOT/ubag-data-base-2.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/uni/ubag/ubag-common/2.0-SNAPSHOT/ubag-common-2.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/alibaba/fastjson2/fastjson2/2.0.51/fastjson2-2.0.51.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/slf4j/jcl-over-slf4j/2.0.13/jcl-over-slf4j-2.0.13.jar" enabled="true" runInBatchMode="false"/>
@@ -82,7 +79,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/berkeleydb/je/3.2.76/je-3.2.76.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/xerial/sqlite-jdbc/3.41.2.2/sqlite-jdbc-3.41.2.2.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/uni/ubag/ubag-log-base/2.0-SNAPSHOT/ubag-log-base-2.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-tx/6.0.21/spring-tx-6.0.21.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-beans/6.0.21/spring-beans-6.0.21.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-jdbc/6.0.21/spring-jdbc-6.0.21.jar" enabled="true" runInBatchMode="false"/>
@@ -182,7 +178,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/calcite/calcite-server/1.25.0/calcite-server-1.25.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/eclipse/jetty/jetty-io/11.0.21/jetty-io-11.0.21.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/com/uni/ubag/ubag-util/2.0-SNAPSHOT/ubag-util-2.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/ojalgo/ojalgo/47.2.0/ojalgo-47.2.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/opencsv/opencsv/5.0/opencsv-5.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/commons/commons-text/1.7/commons-text-1.7.jar" enabled="true" runInBatchMode="false"/>

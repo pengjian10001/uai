@@ -1,0 +1,9 @@
+# 模型与演示产物
+models/*.onnx
+models/haarcascade_frontalface_default.xml
+
+# 演示数据（可通过 scripts/setup-demo.sh 重新生成）
+demo-data/
+
+# 检索结果
+face-search-result.json

@@ -388,30 +388,28 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 </div>
 <div class="execution-group">
 <div class="execution-header" onclick="toggle('g0')">
-  <span class="chevron">&#9660;</span>  <span class="execution-memory-id">Session: 46751e7c-e023-465e-a246-3a8ff630039e</span>  <div class="execution-meta">    <span class="section-count">1 run(s)</span><span class="status-badge st-ok">1 success</span>  </div>
+  <span class="chevron">&#9660;</span>  <span class="execution-memory-id">Session: b6ff07b3-d2f4-43c2-a071-c7f3cb8e0084</span>  <div class="execution-meta">    <span class="section-count">1 run(s)</span><span class="status-badge st-ok">1 success</span>  </div>
 </div>
 <div id="g0" class="execution-body">
 <div class="single-exec">
-<div class="exec-summary"><span class="status-dot st-dot-ok"></span><span class="exec-agent">openclawAutonomousDevPipeline</span><span class="dur-badge">11.4s</span><span class="exec-time">20:37:54.005 &#8594; 20:38:05.395</span></div>
+<div class="exec-summary"><span class="status-dot st-dot-ok"></span><span class="exec-agent">openclawAutonomousDevPipeline</span><span class="dur-badge">1m 24s</span><span class="exec-time">20:22:00.051 &#8594; 20:23:24.563</span></div>
 <table class="wf-table">
 <thead><tr><th>Agent</th><th>Duration</th><th>Tokens</th><th class="wf-timeline-col">Timeline</th><th>Input</th><th>Output</th></tr></thead>
 <tbody>
-<tr><td><div class="wf-agent"><span class="topology-badge sm seq">Sequence</span> openclawAutonomousDevPipeline</div></td><td class="wf-dur">11.4s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-seq" style="left:0.0%;width:100.0%;" title="openclawAutonomousDevPipeline: 11.4s"></div></div></td><td class="wf-io"><span class="tt-trigger">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，...<span class="tt-content">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮, maxLoopIterations=10, rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></span></td><td class="wf-io"><span class="tt-trigger">success</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm ai">AI</span> openclawRequestAnalyst</div></td><td class="wf-dur">2.8s</td><td class="wf-dur">188</td><td><div class="wf-bar-track"><div class="wf-bar bar-ai" style="left:0.0%;width:24.7%;" title="openclawRequestAnalyst: 2.8s"></div></div></td><td class="wf-io"><span class="tt-trigger">{rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></td><td class="wf-io"><span class="tt-trigger">{
-  &quot;pageTitle&quot;: &quot;极客风格线上商店&quot;,
+<tr><td><div class="wf-agent"><span class="topology-badge sm seq">Sequence</span> openclawAutonomousDevPipeline</div></td><td class="wf-dur">1m 24s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-seq" style="left:0.0%;width:100.0%;" title="openclawAutonomousDevPipeline: 1m 24s"></div></div></td><td class="wf-io"><span class="tt-trigger">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，...<span class="tt-content">{targetDir=target/openclaw-demo-store, request=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮, maxLoopIterations=10, rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></span></td><td class="wf-io"><span class="tt-trigger">success</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm ai">AI</span> openclawRequestAnalyst</div></td><td class="wf-dur">6.0s</td><td class="wf-dur">189</td><td><div class="wf-bar-track"><div class="wf-bar bar-ai" style="left:0.0%;width:7.1%;" title="openclawRequestAnalyst: 6.0s"></div></div></td><td class="wf-io"><span class="tt-trigger">{rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮}</span></td><td class="wf-io"><span class="tt-trigger">{
+  &quot;pageTitle&quot;: &quot;Openclaw Skill 线上商店&quot;,
   &quot;maxLoopIterations&quot;: 6
 }</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm loop">Loop</span> openclawWriteVerifyLoop</div></td><td class="wf-dur">6.2s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-loop" style="left:46.0%;width:54.0%;" title="openclawWriteVerifyLoop: 6.2s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, request=极客风格线上商店, analysisJson={
-  &quot;pageTitle&quot;: &quot;极客风格线上商店&quot;,
-  &quot;maxLo...<span class="tt-content">{allow=yes, request=极客风格线上商店, analysisJson={
-  &quot;pageTitle&quot;: &quot;极客风格线上商店&quot;,
-  &quot;maxLoopIterations&quot;: 6
-}, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm loop">Loop</span> openclawWriteVerifyLoop</div></td><td class="wf-dur">6.1s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-loop" style="left:92.8%;width:7.2%;" title="openclawWriteVerifyLoop: 6.1s"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, request=Openclaw Skill 线上商店, analysisJson={
+  &quot;pageTitle&quot;: &quot;Openclaw...<span class="tt-content">{allow=yes, request=Openclaw Skill 线上商店, analysisJson={
+  &quot;pageTitle&quot;: &quot;Openclaw Skill 线上商店&quot;,
+  &quot;maxLoopIterations..., code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., maxLoopIterations=6, rawUserRequest=请为 Openclaw Skill 线上商店生成极客风格首页标题，并建议最多循环校验 6 轮, check=success, file=/Users/pengjian/work/workspace-uni/uai/uai-example/target/op..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:46.0%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 1, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">63ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:54.8%;width:0.6%;" title="adjustCode: 63ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:92.8%;width:1.2%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 1, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">4ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:94.0%;width:0.4%;" title="adjustCode: 4ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
@@ -420,7 +418,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
-  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;title&gt;Openclaw Skill 线上商店&lt;/title&gt;
   &lt;style&gt;
     :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
     body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
@@ -438,7 +436,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/head&gt;
 &lt;body&gt;
   &lt;header&gt;
-    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;h1&gt;Openclaw Skill 线上商店&lt;/h1&gt;
     &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
   &lt;/header&gt;
   &lt;main&gt;
@@ -455,15 +453,15 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/body&gt;
 &lt;/html&gt;
 </span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">35ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:55.4%;width:0.4%;" title="writeHtmlToDisk: 35ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 0</span></div></td><td class="wf-dur">7ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:94.0%;width:0.4%;" title="writeHtmlToDisk: 7ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:55.7%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 2, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:64.5%;width:0.4%;" title="adjustCode: 1ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:94.0%;width:1.2%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 2, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:95.2%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
@@ -472,7 +470,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
-  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;title&gt;Openclaw Skill 线上商店&lt;/title&gt;
   &lt;style&gt;
     :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
     body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
@@ -490,7 +488,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/head&gt;
 &lt;body&gt;
   &lt;header&gt;
-    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;h1&gt;Openclaw Skill 线上商店&lt;/h1&gt;
     &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
   &lt;/header&gt;
   &lt;main&gt;
@@ -508,15 +506,15 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/body&gt;
 &lt;/html&gt;
 </span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">2ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:64.5%;width:0.4%;" title="writeHtmlToDisk: 2ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 1</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:95.2%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:64.5%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 3, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:73.4%;width:0.4%;" title="adjustCode: 1ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:95.2%;width:1.2%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 3, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:96.4%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
@@ -525,7 +523,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
-  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;title&gt;Openclaw Skill 线上商店&lt;/title&gt;
   &lt;style&gt;
     :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
     body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
@@ -543,7 +541,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/head&gt;
 &lt;body&gt;
   &lt;header&gt;
-    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;h1&gt;Openclaw Skill 线上商店&lt;/h1&gt;
     &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
   &lt;/header&gt;
   &lt;main&gt;
@@ -562,15 +560,15 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/body&gt;
 &lt;/html&gt;
 </span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:73.4%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 2</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:96.4%;width:0.4%;" title="writeHtmlToDisk: 0ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:73.4%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 4, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:82.2%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:96.4%;width:1.2%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 4, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:97.6%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
@@ -579,7 +577,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
-  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;title&gt;Openclaw Skill 线上商店&lt;/title&gt;
   &lt;style&gt;
     :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
     body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
@@ -597,7 +595,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/head&gt;
 &lt;body&gt;
   &lt;header&gt;
-    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;h1&gt;Openclaw Skill 线上商店&lt;/h1&gt;
     &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
   &lt;/header&gt;
   &lt;main&gt;
@@ -617,15 +615,15 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/body&gt;
 &lt;/html&gt;
 </span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:82.2%;width:0.4%;" title="writeHtmlToDisk: 0ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 3</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:97.6%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:82.2%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 5, need 6 for success)</span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:91.1%;width:0.4%;" title="adjustCode: 1ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:97.6%;width:1.2%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">error: mock browser warmup failed (attempt 5, need 6 for success)</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:98.8%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
@@ -634,7 +632,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
-  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;title&gt;Openclaw Skill 线上商店&lt;/title&gt;
   &lt;style&gt;
     :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
     body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
@@ -652,7 +650,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/head&gt;
 &lt;body&gt;
   &lt;header&gt;
-    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;h1&gt;Openclaw Skill 线上商店&lt;/h1&gt;
     &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
   &lt;/header&gt;
   &lt;main&gt;
@@ -673,14 +671,14 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/body&gt;
 &lt;/html&gt;
 </span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">2ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:91.1%;width:0.4%;" title="writeHtmlToDisk: 2ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> writeHtmlToDisk <span class="iter-tag">iter 4</span></div></td><td class="wf-dur">1ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:98.8%;width:0.4%;" title="writeHtmlToDisk: 1ms"></div></div></td><td class="wf-io"><span class="tt-trigger">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;......<span class="tt-content">{allow=yes, code=&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;..., targetDir=target/openclaw-demo-store}</span></span></td><td class="wf-io"><span class="tt-trigger">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/op...<span class="tt-content">/Users/pengjian/work/workspace-uni/uai/uai-example/target/openclaw-demo-store/openclaw-skill-store-generated.html</span></span></td></tr>
-<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 5</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:91.1%;width:8.8%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">success</span></td></tr>
+<tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> mockBrowserLoad <span class="iter-tag">iter 5</span></div></td><td class="wf-dur">1.0s</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:98.8%;width:1.2%;" title="mockBrowserLoad: 1.0s"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">success</span></td></tr>
 <tr><td><div class="wf-agent"><span class="wf-indent"></span><span class="wf-indent"></span><span class="wf-connector">&#x2514;</span><span class="topology-badge sm nonai">Action</span> adjustCode <span class="iter-tag">iter 5</span></div></td><td class="wf-dur">0ms</td><td class="wf-dur"></td><td><div class="wf-bar-track"><div class="wf-bar bar-nonai" style="left:100.0%;width:0.4%;" title="adjustCode: 0ms"></div></div></td><td class="wf-io"></td><td class="wf-io"><span class="tt-trigger">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-CN&quot;&gt;
 &lt;head&gt;
@@ -690,7 +688,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;/&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;
-  &lt;title&gt;极客风格线上商店&lt;/title&gt;
+  &lt;title&gt;Openclaw Skill 线上商店&lt;/title&gt;
   &lt;style&gt;
     :root { color-scheme: dark light; --bg: #0f1419; --card: #1a2332; --accent: #3d9cf5; --text: #e7ecf3; }
     body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
@@ -708,7 +706,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 &lt;/head&gt;
 &lt;body&gt;
   &lt;header&gt;
-    &lt;h1&gt;极客风格线上商店&lt;/h1&gt;
+    &lt;h1&gt;Openclaw Skill 线上商店&lt;/h1&gt;
     &lt;span class=&quot;badge&quot;&gt;Openclaw Skill Store · Demo&lt;/span&gt;
   &lt;/header&gt;
   &lt;main&gt;
@@ -741,7 +739,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,
 </div>
 </div>
 </section>
-<footer class="footer">Generated by LangChain4j at 2026-05-06 20:38:05</footer>
+<footer class="footer">Generated by LangChain4j at 2026-06-23 20:23:24</footer>
 </main>
 <script>
 function toggle(id) {

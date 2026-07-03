@@ -17,24 +17,83 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jackson.version>2.13.4</jackson.version>
+		<javacv.version>1.5.9</javacv.version>
+		<djl.version>0.24.0</djl.version>
+		<milvus.version>2.4.0</milvus.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-            <groupId>org.bsc.langgraph4j</groupId>
-            <artifactId>langgraph4j-core</artifactId>
-            <version>1.8.11</version>
-        </dependency>
+			<groupId>org.bsc.langgraph4j</groupId>
+			<artifactId>langgraph4j-core</artifactId>
+			<version>1.8.11</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>2.0.13</version>
 		</dependency>
-        
+
+		<!-- 视频解码 + OpenCV 人脸检测/特征 -->
+		<dependency>
+			<groupId>org.bytedeco</groupId>
+			<artifactId>javacv-platform</artifactId>
+			<version>${javacv.version}</version>
+		</dependency>
+
+		<!-- DJL 纯 Java 深度学习（可选 ArcFace ONNX 推理） -->
+		<dependency>
+			<groupId>ai.djl</groupId>
+			<artifactId>api</artifactId>
+			<version>${djl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ai.djl</groupId>
+			<artifactId>model-zoo</artifactId>
+			<version>${djl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ai.djl.onnxruntime</groupId>
+			<artifactId>onnxruntime-engine</artifactId>
+			<version>${djl.version}</version>
+		</dependency>
+
+		<!-- Milvus 向量库（企业级路线，本地 demo 默认用内存库） -->
+		<dependency>
+			<groupId>io.milvus</groupId>
+			<artifactId>milvus-sdk-java</artifactId>
+			<version>${milvus.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<mainClass>com.uni.uai.graph.facesearch.FaceSearchDemo</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<id>demo-data</id>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>com.uni.uai.graph.facesearch.DemoDataGenerator</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
-
 
 </project>
