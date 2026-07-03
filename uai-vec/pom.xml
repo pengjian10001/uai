@@ -17,6 +17,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jackson.version>2.13.4</jackson.version>
+		<milvus.version>2.4.11</milvus.version>
+		<exec.mainClass>com.uni.uai.vec.example.milvus.NewsHotTopicDemo</exec.mainClass>
 	</properties>
 
 	<dependencies>
@@ -51,10 +53,32 @@
 			<version>2.20.0</version>
 		</dependency>
 
+		<!-- Milvus Java SDK v2 -->
+		<dependency>
+			<groupId>io.milvus</groupId>
+			<artifactId>milvus-sdk-java</artifactId>
+			<version>${milvus.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 
 	</dependencies>
 
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<mainClass>${exec.mainClass}</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 

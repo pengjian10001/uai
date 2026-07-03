@@ -1,0 +1,226 @@
+[
+  {
+    "id": "news-001",
+    "title": "欧盟人工智能法案进入全面执行阶段",
+    "language": "zh",
+    "source": "新华社",
+    "publishedAtEpochMs": 1717200000000,
+    "report": "欧盟《人工智能法案》正式进入执行期，高风险AI系统需接受合规审查。科技巨头须在90天内提交评估报告。业界担忧合规成本可能影响创新节奏，但监管机构强调安全优先。"
+  },
+  {
+    "id": "news-002",
+    "title": "欧盟发布中小企业AI合规指南",
+    "language": "zh",
+    "source": "财新网",
+    "publishedAtEpochMs": 1717203600000,
+    "report": "欧盟监管机构发布面向中小企业的AI合规清单，涵盖模型文档、偏见测试与事故报告。行业团体呼吁为非关键应用延长过渡期。专家预计合规要求将重塑欧洲AI市场格局。"
+  },
+  {
+    "id": "news-003",
+    "title": "OpenAI 发布企业级推理大模型",
+    "language": "zh",
+    "source": "36氪",
+    "publishedAtEpochMs": 1717207200000,
+    "report": "OpenAI推出面向企业场景的新推理模型，在法律与编程任务上表现提升。国内云厂商已开始提供API接入。业内认为这将加剧与谷歌、Anthropic的竞争，并推动大模型商业化落地。"
+  },
+  {
+    "id": "news-004",
+    "title": "谷歌DeepMind升级多模态智能体",
+    "language": "zh",
+    "source": "机器之心",
+    "publishedAtEpochMs": 1717210800000,
+    "report": "谷歌DeepMind发布多模态智能体升级版本，工具调用能力显著增强。演示视频展示自主浏览网页与表格分析能力。企业试点将于下季度启动，竞争对手预计跟进类似方案。"
+  },
+  {
+    "id": "news-005",
+    "title": "Anthropic 强化 Claude 企业安全功能",
+    "language": "zh",
+    "source": "量子位",
+    "publishedAtEpochMs": 1717214400000,
+    "report": "Anthropic为Claude新增企业级安全控制，包括策略过滤与审计日志。金融、医疗等受监管行业客户反响积极。此举顺应市场对可信赖AI部署的迫切需求。"
+  },
+  {
+    "id": "news-006",
+    "title": "Meta 开源端侧小参数语言模型",
+    "language": "zh",
+    "source": "InfoQ",
+    "publishedAtEpochMs": 1717218000000,
+    "report": "Meta开源一款面向边缘设备的小参数语言模型，开发者可微调用于离线助手场景。业界认为这是对降低企业推理成本需求的回应，或将推动端侧AI应用普及。"
+  },
+  {
+    "id": "news-007",
+    "title": "EU AI Act enters final enforcement phase",
+    "language": "en",
+    "source": "Reuters",
+    "publishedAtEpochMs": 1717221600000,
+    "report": "The European Union's AI Act moves into enforcement. Regulators will audit high-risk AI systems in healthcare and finance. Tech giants must submit compliance reports within 90 days."
+  },
+  {
+    "id": "news-008",
+    "title": "OpenAI releases new reasoning model for enterprise",
+    "language": "en",
+    "source": "TechCrunch",
+    "publishedAtEpochMs": 1717225200000,
+    "report": "OpenAI unveiled a reasoning-focused model aimed at enterprise workflows. Early benchmarks show gains on legal and coding tasks. Analysts say the release intensifies competition with Google and Anthropic."
+  },
+  {
+    "id": "news-009",
+    "title": "巴黎奥运会开幕式创全球收视新高",
+    "language": "zh",
+    "source": "央视新闻",
+    "publishedAtEpochMs": 1717228800000,
+    "report": "巴黎奥运会开幕式全球收视创纪录，塞纳河沿线演出突出环保主题。安保部门称人流密集但秩序良好。二手票平台需求激增，主办城市旅游热度持续上升。"
+  },
+  {
+    "id": "news-010",
+    "title": "因塞纳河水质问题铁人三项比赛延期",
+    "language": "zh",
+    "source": "澎湃新闻",
+    "publishedAtEpochMs": 1717232400000,
+    "report": "由于塞纳河水质检测未达标，巴黎奥运会铁人三项比赛延期。运动员表示理解并强调健康优先。巴黎市政府承诺追加净化设施投入后再重赛。"
+  },
+  {
+    "id": "news-011",
+    "title": "法国游泳接力夺巴黎奥运首金",
+    "language": "zh",
+    "source": "体坛周报",
+    "publishedAtEpochMs": 1717236000000,
+    "report": "法国队在游泳接力项目夺得巴黎奥运会首金，主场观众热情高涨。转播收视率明显上升，媒体焦点从开幕式转向赛事成绩。"
+  },
+  {
+    "id": "news-012",
+    "title": "奥运赛程调整引发运动员不满",
+    "language": "zh",
+    "source": "新京报",
+    "publishedAtEpochMs": 1717239600000,
+    "report": "铁人三项延期后，多项奥运赛程被迫调整，部分运动员公开表达不满。组委会承诺加强沟通机制。赞助商关注黄金时段变化对品牌曝光的影响。"
+  },
+  {
+    "id": "news-013",
+    "title": "巴黎奥运场馆周边交通管制升级",
+    "language": "zh",
+    "source": "界面新闻",
+    "publishedAtEpochMs": 1717243200000,
+    "report": "为保障奥运赛事顺利进行，巴黎多个场馆周边实施临时交通管制。当地市民需提前规划出行路线。组委会称措施将持续至赛事结束。"
+  },
+  {
+    "id": "news-014",
+    "title": "Paris Olympics opening ceremony draws record audience",
+    "language": "en",
+    "source": "BBC",
+    "publishedAtEpochMs": 1717246800000,
+    "report": "The Paris Olympics opening ceremony attracted a record global TV and streaming audience. Organizers highlighted sustainability themes along the Seine. Security agencies reported smooth operations despite heavy crowds."
+  },
+  {
+    "id": "news-015",
+    "title": "Olympic triathlon postponed due to Seine water quality",
+    "language": "en",
+    "source": "AP",
+    "publishedAtEpochMs": 1717250400000,
+    "report": "Organizers postponed the Olympic triathlon after Seine water quality failed safety tests. Athletes expressed frustration but supported health priorities. Paris officials pledged additional filtration investments."
+  },
+  {
+    "id": "news-016",
+    "title": "地中海极端高温引发多国紧急应对",
+    "language": "zh",
+    "source": "环球时报",
+    "publishedAtEpochMs": 1717254000000,
+    "report": "地中海多国遭遇极端高温，西班牙、意大利、希腊启动应急措施。医院中暑病例增加，科学家将其与海洋持续升温关联。空调用电高峰给电网带来压力。"
+  },
+  {
+    "id": "news-017",
+    "title": "南欧野火蔓延 多国出动飞机灭火",
+    "language": "zh",
+    "source": "中国日报",
+    "publishedAtEpochMs": 1717257600000,
+    "report": "受持续干旱影响，南欧多国野火迅速蔓延。葡萄牙、西西里等地出动飞机支援灭火。多个农村社区被迫疏散。气象部门预计未来一周仍难有明显缓解。"
+  },
+  {
+    "id": "news-018",
+    "title": "联大气候报告：全球海洋升温速度加快",
+    "language": "zh",
+    "source": "中国科学报",
+    "publishedAtEpochMs": 1717261200000,
+    "report": "联合国气候报告指出全球海洋升温速度加快，珊瑚礁压力增大。科学家呼吁加快减排并增加适应资金。各国将在下一轮气候峰会前面临更大政策压力。"
+  },
+  {
+    "id": "news-019",
+    "title": "极端天气推高欧洲能源需求",
+    "language": "zh",
+    "source": "第一财经",
+    "publishedAtEpochMs": 1717264800000,
+    "report": "持续高温导致欧洲多国空调用电需求激增，能源价格出现波动。分析师警告极端天气或成为夏季常态。各国政府正评估电网承载能力与应急调度方案。"
+  },
+  {
+    "id": "news-020",
+    "title": "我国发布夏季防汛抗旱新部署",
+    "language": "zh",
+    "source": "人民日报",
+    "publishedAtEpochMs": 1717268400000,
+    "report": "相关部门就夏季防汛抗旱作出新部署，强调加强极端天气监测预警。重点地区将开展隐患排查与应急演练。专家呼吁提升基层应对高温干旱的综合能力。"
+  },
+  {
+    "id": "news-021",
+    "title": "Record heatwave triggers emergency measures in Mediterranean",
+    "language": "en",
+    "source": "Guardian",
+    "publishedAtEpochMs": 1717272000000,
+    "report": "A record heatwave forced emergency measures in Spain, Italy, and Greece. Hospitals reported rising heatstroke cases. Climate scientists linked the event to persistent ocean warming."
+  },
+  {
+    "id": "news-022",
+    "title": "Wildfires spread in southern Europe amid drought",
+    "language": "en",
+    "source": "CNN",
+    "publishedAtEpochMs": 1717275600000,
+    "report": "Wildfires expanded across southern Europe as drought conditions worsened. Firefighters deployed aerial support in Portugal and Sicily. Evacuations affected rural communities."
+  },
+  {
+    "id": "news-023",
+    "title": "美国摇摆州选情再度胶着",
+    "language": "zh",
+    "source": "参考消息",
+    "publishedAtEpochMs": 1717279200000,
+    "report": "最新民调显示宾夕法尼亚、密歇根、亚利桑那等摇摆州选情胶着。竞选团队加大经济议题广告投放。选举部门提醒社交平台虚假信息风险，提前投票规则引发讨论。"
+  },
+  {
+    "id": "news-024",
+    "title": "美国竞选团队转向短视频触达年轻选民",
+    "language": "zh",
+    "source": "环球网",
+    "publishedAtEpochMs": 1717282800000,
+    "report": "美国各竞选团队将预算向短视频平台倾斜，以争取年轻选民。创作者发布议题内容需标注赞助信息。研究人员警告情绪化片段传播速度可能超过事实核查。"
+  },
+  {
+    "id": "news-025",
+    "title": "邮寄选票核验规则引发激烈辩论",
+    "language": "zh",
+    "source": "观察者网",
+    "publishedAtEpochMs": 1717286400000,
+    "report": "美国多州议会就邮寄选票身份核验规则展开辩论。民权组织认为严格规定可能压低投票率。选举管理人员呼吁统一培训并增加联邦资金支持。"
+  },
+  {
+    "id": "news-026",
+    "title": "摇摆州经济议题成选战焦点",
+    "language": "zh",
+    "source": "国际在线",
+    "publishedAtEpochMs": 1717290000000,
+    "report": "通胀与就业成为美国摇摆州选民最关注议题。两党参选人均调整竞选纲领，强调中产阶层利益。地方媒体称经济叙事将主导选战最后阶段。"
+  },
+  {
+    "id": "news-027",
+    "title": "US election polls tighten in swing states",
+    "language": "en",
+    "source": "NYT",
+    "publishedAtEpochMs": 1717293600000,
+    "report": "Latest polls show tightening races in Pennsylvania, Michigan, and Arizona. Campaigns increased ad spending on economic messaging. Election officials warned about misinformation on social platforms."
+  },
+  {
+    "id": "news-028",
+    "title": "Campaigns target youth voters with short-form video",
+    "language": "en",
+    "source": "Washington Post",
+    "publishedAtEpochMs": 1717297200000,
+    "report": "US campaigns are shifting budgets to short-form video platforms to reach young voters. Creators are paid for issue-based content with disclosure labels. Researchers warn emotional clips may spread faster than fact checks."
+  }
+]
